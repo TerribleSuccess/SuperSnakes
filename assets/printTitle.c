@@ -1,11 +1,6 @@
 #include <curses.h>
 
 void printTitle(int myX,int myY){
-    start_color();
-    init_color(COLOR_MAGENTA, 588, 294, 0);
-    init_pair(1, COLOR_WHITE,   COLOR_WHITE);
-    init_pair(2, COLOR_MAGENTA, COLOR_MAGENTA);
-
     int y = myY;
     int x = myX;
 
@@ -271,6 +266,4 @@ void printTitle(int myX,int myY){
     move(y + 12, x);
     attron(COLOR_PAIR(2));
     for(int i = 0; i < 80; i ++)printw(" ");
-
-    refresh();
 }
