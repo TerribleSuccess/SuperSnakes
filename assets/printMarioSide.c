@@ -1,82 +1,83 @@
 #include <curses.h>
+#include "../main.h"
 
 void printMarioSide(int xIn, int yIn){
     int x = xIn;
     int y = yIn;
 
     move(y+0, x);
-    attron(COLOR_PAIR(1)); printw("      ");
-    attron(COLOR_PAIR(2)); printw("          ");
-    attron(COLOR_PAIR(1)); printw("        ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("      ");
+    attron(COLOR_PAIR(COLOR_PAIR_RED)); printw("          ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("        ");
 
     move(y+1, x);
-    attron(COLOR_PAIR(1)); printw("    ");
-    attron(COLOR_PAIR(2)); printw("                  ");
-    attron(COLOR_PAIR(1)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("    ");
+    attron(COLOR_PAIR(COLOR_PAIR_RED)); printw("                  ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("  ");
 
     move(y+2, x);
-    attron(COLOR_PAIR(1)); printw("    ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("    ");
     attron(COLOR_PAIR(5)); printw("      ");
     attron(COLOR_PAIR(3)); printw("    ");
     attron(COLOR_PAIR(6)); printw("  ");
     attron(COLOR_PAIR(3)); printw("  ");
-    attron(COLOR_PAIR(1)); printw("      ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("      ");
 
     move(y+3, x);
-    attron(COLOR_PAIR(1)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("  ");
     attron(COLOR_PAIR(5)); printw("  ");
     attron(COLOR_PAIR(3)); printw("  ");
     attron(COLOR_PAIR(5)); printw("  ");
     attron(COLOR_PAIR(3)); printw("        ");
     attron(COLOR_PAIR(6)); printw("  ");
     attron(COLOR_PAIR(3)); printw("      ");
-    attron(COLOR_PAIR(1)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("  ");
 
     move(y+4, x);
-    attron(COLOR_PAIR(1)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("  ");
     attron(COLOR_PAIR(5)); printw("  ");
     attron(COLOR_PAIR(3)); printw("  ");
     attron(COLOR_PAIR(5)); printw("    ");
     attron(COLOR_PAIR(3)); printw("      ");
     attron(COLOR_PAIR(6)); printw("  ");
     attron(COLOR_PAIR(3)); printw("      ");
-    attron(COLOR_PAIR(1)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("  ");
 
     move(y+5, x);
-    attron(COLOR_PAIR(1)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("  ");
     attron(COLOR_PAIR(5)); printw("    ");
     attron(COLOR_PAIR(3)); printw("        ");
     attron(COLOR_PAIR(6)); printw("        ");
-    attron(COLOR_PAIR(1)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("  ");
 
     move(y+6, x);
-    attron(COLOR_PAIR(1)); printw("      ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("      ");
     attron(COLOR_PAIR(3)); printw("            ");
-    attron(COLOR_PAIR(1)); printw("    ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("    ");
 
     move(y+7, x);
-    attron(COLOR_PAIR(1)); printw("    ");
-    attron(COLOR_PAIR(2)); printw("    ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("    ");
+    attron(COLOR_PAIR(COLOR_PAIR_RED)); printw("    ");
     attron(COLOR_PAIR(4)); printw("  ");
-    attron(COLOR_PAIR(2)); printw("        ");
-    attron(COLOR_PAIR(1)); printw("      ");
+    attron(COLOR_PAIR(COLOR_PAIR_RED)); printw("        ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("      ");
 
     move(y+8, x);
-    attron(COLOR_PAIR(1)); printw("  ");
-    attron(COLOR_PAIR(2)); printw("      ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_RED)); printw("      ");
     attron(COLOR_PAIR(4)); printw("  ");
-    attron(COLOR_PAIR(2)); printw("    ");
+    attron(COLOR_PAIR(COLOR_PAIR_RED)); printw("    ");
     attron(COLOR_PAIR(4)); printw("  ");
-    attron(COLOR_PAIR(2)); printw("      ");
-    attron(COLOR_PAIR(1)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_RED)); printw("      ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("  ");
 
     move(y+9, x);
-    attron(COLOR_PAIR(2)); printw("        ");
+    attron(COLOR_PAIR(COLOR_PAIR_RED)); printw("        ");
     attron(COLOR_PAIR(4)); printw("      ");
     attron(COLOR_PAIR(7)); printw("  ");
     attron(COLOR_PAIR(4)); printw("  ");
-    attron(COLOR_PAIR(2)); printw("        ");
-    attron(COLOR_PAIR(2)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_RED)); printw("        ");
+    attron(COLOR_PAIR(COLOR_PAIR_RED)); printw("  ");
 
     move(y+10,x);
     attron(COLOR_PAIR(3)); printw("        ");
@@ -91,26 +92,26 @@ void printMarioSide(int xIn, int yIn){
     attron(COLOR_PAIR(3)); printw("      ");
 
     move(y+12,x);
-    attron(COLOR_PAIR(1)); printw("    ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("    ");
     attron(COLOR_PAIR(4)); printw("      ");
-    attron(COLOR_PAIR(1)); printw("    ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("    ");
     attron(COLOR_PAIR(4)); printw("      ");
-    attron(COLOR_PAIR(1)); printw("    ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("    ");
 
     move(y+13,x);
-    attron(COLOR_PAIR(1)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("  ");
     attron(COLOR_PAIR(5)); printw("      ");
-    attron(COLOR_PAIR(1)); printw("      ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("      ");
     attron(COLOR_PAIR(5)); printw("      ");
-    attron(COLOR_PAIR(1)); printw("  ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("  ");
 
     move(y+14,x);
     attron(COLOR_PAIR(5)); printw("        ");
-    attron(COLOR_PAIR(1)); printw("      ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("      ");
     attron(COLOR_PAIR(5)); printw("        ");
 
     move(y+15,x);
     attron(COLOR_PAIR(5)); printw("        ");
-    attron(COLOR_PAIR(1)); printw("      ");
+    attron(COLOR_PAIR(COLOR_PAIR_WHITE)); printw("      ");
     attron(COLOR_PAIR(5)); printw("        ");
 }
