@@ -1,8 +1,8 @@
 #include <curses.h>
 
-void printMarioSide(int marioX, int marioY){
-    int y = marioY;
-    int x = marioX;
+void printMarioSide(int xIn, int yIn){
+    int x = xIn;
+    int y = yIn;
 
     move(y+0, x);
     attron(COLOR_PAIR(1)); printw("      ");
