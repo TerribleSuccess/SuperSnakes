@@ -2,7 +2,9 @@
 
 void printMarioSide(int marioX, int marioY){
     start_color();
-    init_pair(1, COLOR_BLACK,   COLOR_BLACK);
+    init_color(COLOR_MAGENTA, 588, 294, 0);
+
+    init_pair(1, COLOR_WHITE,   COLOR_WHITE);
     init_pair(2, COLOR_RED,     COLOR_RED);
     init_pair(3, COLOR_YELLOW,  COLOR_YELLOW);
     init_pair(4, COLOR_BLUE,    COLOR_BLUE);
@@ -12,7 +14,7 @@ void printMarioSide(int marioX, int marioY){
 
     int y = marioY;
     int x = marioX;
-    
+
     move(y+0, x);
     attron(COLOR_PAIR(1)); printw("      ");
     attron(COLOR_PAIR(2)); printw("          ");
