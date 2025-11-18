@@ -14,7 +14,7 @@ void printTitle(){
     int x = width/COLOR_PAIR_RED-40;
     int y = height/4;
     
-    wbkgd(stdscr, COLOR_PAIR(4));
+    wbkgd(stdscr, COLOR_PAIR(COLOR_PAIR_BABYBLUE));
 
     move(y + 0, x);
     attron(COLOR_PAIR(COLOR_PAIR_RED));
