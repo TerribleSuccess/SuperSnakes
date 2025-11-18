@@ -3,27 +3,53 @@
 
 #include "../main.h"
 
+int checkTop(int xIn, int yIn){
+    int x = xIn;
+    int y = yIn;
+    if ((PAIR_NUMBER(mvinch(y, x+6))    == COLOR_PAIR_BABYBLUE) &&
+        (PAIR_NUMBER(mvinch(y, x+12))   == COLOR_PAIR_BABYBLUE) &&
+        (PAIR_NUMBER(mvinch(y+1, x+4))  == COLOR_PAIR_BABYBLUE) &&
+        (PAIR_NUMBER(mvinch(y+1, x+18)) == COLOR_PAIR_BABYBLUE)){
+        return 1;
+    }
+    return 0;
+}
+
+int checkBottom(int xIn, int yIn){
+    int x = xIn;
+    int y = yIn;
+    if ((PAIR_NUMBER(mvinch(y+16, x+6))  == COLOR_PAIR_BABYBLUE) && (PAIR_NUMBER(mvinch(y+16, x+12)) == COLOR_PAIR_BABYBLUE)){
+        return 1;
+    }
+    return 0;
+}
+
 void jump(int xIn, int yIn){
+    const int MAX_JUMP = 30;
+
     int x = xIn;
     int y = yIn;
 
     int iTwo = 0;
     for(int i = 0; i < 30; i++){
-        if(PAIR_NUMBER(mvinch(y-i, x+16)) == COLOR_PAIR_BABYBLUE){
-            printMarioSide(x, y-iTwo);
-            marioBottomMask(x, y-iTwo);
+        if(checkTop(x, y-i)){
+            deleteMarioSide(x, y-iTwo);
             iTwo++;
-        }
-        refresh();
-        usleep(1+(i*i*50));
-    }
-    for(int i = 0; i < 29; i++){
-        if(PAIR_NUMBER(mvinch(y+17, x+16)) == COLOR_PAIR_BABYBLUE){
             printMarioSide(x, y-iTwo);
-            marioTopMask(x, y-iTwo);
-            iTwo--;
+            move(1,1);
+            printw("%d", i);
         }
         refresh();
-        usleep(12500-(i*250));
+        usleep(10000);
+    }
+
+    for(int i = iTwo; i > 0; i--){
+        if(checkBottom(x, y-i)){
+            deleteMarioSide(x, y-iTwo);
+            iTwo--;
+            printMarioSide(x, y-iTwo);
+        }
+        refresh();
+        usleep(10000);
     }
 }
