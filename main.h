@@ -19,8 +19,8 @@ void printTitle(void);
 void printStart(int,int);
 
 void printMarioSide(int, int);
-void marioTopMask(int, int);
-void marioBottomMask(int, int);
+void deleteMarioSide(int, int);
+void right(int, int);
 
 void jump(int, int);
 
