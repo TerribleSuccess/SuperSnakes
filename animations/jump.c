@@ -3,22 +3,18 @@
 
 #include "../main.h"
 
-void jump(int x, int y){
-    int marioX = x;
-    int marioY = y;
-    for(int i = 0; i < 30; i++){
-        clear();
-        wbkgd(stdscr, COLOR_PAIR(4));
-        printMarioSide(marioX, marioY-i);
-        printTitle();
+void jump(int xIn, int yIn){
+    int x = xIn;
+    int y = yIn;
+    for(int i = 0; i < 24; i++){
+        printMarioSide(x, y-i);
+        marioBottomMask(x, y-i);
         refresh();
         usleep(4000+(i*250));
     }
-    for(int i = 30; i > 0; i--){
-        clear();
-        wbkgd(stdscr, COLOR_PAIR(4));
-        printMarioSide(marioX, marioY-i);
-        printTitle();
+    for(int i = 25; i > 0; i--){
+        printMarioSide(x, y-i);
+        marioTopMask(x, y-i);
         refresh();
         usleep(12500-(i*250));
     }
