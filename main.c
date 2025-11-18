@@ -18,7 +18,6 @@ int main(){
     noecho();
     keypad(stdscr, TRUE);
     initializeColors();
-    usleep(1000);
 
     clear();
     printMarioSide(width/8, (height*3)/4);
