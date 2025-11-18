@@ -20,25 +20,28 @@ int main(){
     initializeColors();
 
     clear();
-    printMarioSide(width/8, (height*3)/4);
+    int marioX = width/8;
+    int marioY = (height*3)/4;
+    printMarioSide(marioX, marioY);
     refresh();
     printTitle();
-    printMarioSide(width/8, (height*3)/4);
+    printMarioSide(marioX, marioY);
 
     int startMenuToggle = 1;
     while(startMenuToggle){
         int ch = getch();
         switch(ch){
-            case 'w':jump(width/8, (height*3)/4); break;
-            case 'a':jump(width/8, (height*3)/4); break;
-            case 's':jump(width/8, (height*3)/4); break;
-            case 'd':jump(width/8, (height*3)/4); break;
+            case 'w': jump(marioX, marioY); break;
+            case 'a': ; break;
+            case 's': ; break;
+            case 'd': right(marioX, marioY); marioX+=1; break;
             case 'q':startMenuToggle = 0; break;
         }
     }
 
     //Game Code!
 
+    
     //End Of Program
     endwin();
     return 1;
