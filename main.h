@@ -1,3 +1,5 @@
+#include <pthread.h>
+
 #ifndef MAIN_H_
 #define MAIN_H_
 
@@ -20,7 +22,6 @@ void printStart(int,int);
 
 void printMarioSide(int, int);
 void deleteMarioSide(int, int);
-void right(int, int);
 
 void jump(int, int);
 

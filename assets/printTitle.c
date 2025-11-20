@@ -2,6 +2,7 @@
 #include <sys/ioctl.h>
 #include "../main.h"
 
+
 void printTitle(){
     int width;
     int height;
