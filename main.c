@@ -3,61 +3,50 @@
 #include <unistd.h>
 #include "main.h"
 #include <pthread.h>
+#include <stdlib.h>
 
-pthread_t jumpThread;
-pthread_mutex_t screenMutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_t drawMario;
+pthread_t jumpMario;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-volatile int marioX, marioY;
+volatile int xVelocity=0, yVelocity=0;
+int gameOn = 1;
 
-int checkTop(int xIn, int yIn){
-    int x = xIn;
-    int y = yIn;
-    if ((PAIR_NUMBER(mvinch(y, x+6))    == COLOR_PAIR_BABYBLUE) &&
-        (PAIR_NUMBER(mvinch(y, x+12))   == COLOR_PAIR_BABYBLUE) &&
-        (PAIR_NUMBER(mvinch(y+1, x+4))  == COLOR_PAIR_BABYBLUE) &&
-        (PAIR_NUMBER(mvinch(y+1, x+18)) == COLOR_PAIR_BABYBLUE)){
-        return 1;
-    }
-    return 0;
+void right(){
+    pthread_mutex_lock(&mutex);
+    pthread_mutex_unlock(&mutex);
 }
-int checkBottom(int xIn, int yIn){
-    int x = xIn;
-    int y = yIn;
-    if ((PAIR_NUMBER(mvinch(y+16, x+6))  == COLOR_PAIR_BABYBLUE) && (PAIR_NUMBER(mvinch(y+16, x+12)) == COLOR_PAIR_BABYBLUE)){
-        return 1;
-    }
-    return 0;
-}
-void* jumpThreadFunction(void* arg){
-    int iTwo = 0;
-    for(int i = 0; i < 30; i++){
 
-        
-        if(checkTop(marioX, marioY-1)){
-            pthread_mutex_lock(&screenMutex);
-            deleteMarioSide(marioX, marioY);
-       for(int i = iTwo; i > 0; i--){
-        
-        if(checkBottom(marioX, marioY+1)){
-            pthread_mutex_lock(&screenMutex);
-            deleteMarioSide(marioX, marioY);
-            marioY++;
-            printMarioSide(marioX, marioY);
+void* marioDrawFunction(void* arg){
+    int marioX = 20;
+    int marioY = 50;
+    printMarioSide(marioX, marioY);
+    while (gameOn){
+        pthread_mutex_lock(&mutex);
+        if (checkBottom(marioX, marioY) == 1 && yVelocity <= 0){
+            yVelocity--;
+        }else if(checkBottom(marioX, marioY+1) == 0 && yVelocity < 0){
+            yVelocity = 0;
         }
-        pthread_mutex_unlock(&screenMutex);
+        if (xVelocity != 0 || yVelocity != 0){
+            deleteMarioSide(marioX, marioY);
+            if(xVelocity <0)marioX++;
+            if(yVelocity <0)marioY++;
+            if(xVelocity >0)marioX++;
+            if(yVelocity >0)marioY--;
+            printMarioSide(marioX, marioY);
+            
+            if (xVelocity < 0) xVelocity++;
+            if (xVelocity > 0) xVelocity--;
+            if (yVelocity > 0) yVelocity--; 
+        }
+        pthread_mutex_unlock(&mutex);
         refresh();
-        usleep(10000);
+        sleep(1);
     }
     return NULL;
 }
 
-void right(){
-    pthread_mutex_lock(&screenMutex);
-    deleteMarioSide(marioX, marioY);
-    marioX+=2;
-    printMarioSide(marioX, marioY);
-    pthread_mutex_unlock(&screenMutex);
-}
 
 int main(){
     int width;
@@ -68,45 +57,55 @@ int main(){
         height = wbuf.ws_row;
     }
 
-    // 1 time calls
+    //Change Terminal Settings
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
-    initializeColors();
     
-    clear();
-    marioX = width/8;
-    marioY = (height*3)/4;
-    printMarioSide(marioX, marioY);
-    refresh();
-    printTitle();
-    printMarioSide(marioX, marioY);
+    //Setup Title Screen
 
-    int startMenuToggle = 1;
-    while(startMenuToggle){
+  
+    initializeColors();
+    wbkgd(stdscr, COLOR_PAIR_BABYBLUE);
+    refresh();
+    printTitle(width/2-40, height/4);
+    printTitleText(width/2-30, height/4+16);
+
+    //Start Game on Char input
+    int ch = getch();
+
+
+    clearScreenSlow();
+    refresh();
+    usleep(10000);
+
+    printBrick(0, height-4);
+    printBrick(10, height-4);
+    printBrick(20, height-4);
+    printBrick(30, height-4);
+    printBrick(40, height-4);
+    printBrick(50, height-4);
+    printBrick(60, height-4);
+    printBrick(70, height-4);
+    printBrick(80, height-4);
+    printBrick(90, height-4);
+    refresh();
+
+    pthread_create(&drawMario, NULL, marioDrawFunction, NULL);
+
+    while(gameOn){
         int ch = getch();
         switch(ch){
-            case 'w': pthread_create(&jumpThread, NULL, jumpThreadFunction, NULL); break;
-            case 'a': ; break;
+            case 'w': pthread_mutex_lock(&mutex); if(yVelocity == 0)yVelocity+=30; pthread_mutex_unlock(&mutex); break;
+            case 'a': pthread_mutex_lock(&mutex); xVelocity-=15; pthread_mutex_unlock(&mutex); break;;
             case 's': ; break;
-            case 'd': right(); break;
-            case 'q':startMenuToggle = 0; break;
+            case 'd': pthread_mutex_lock(&mutex); xVelocity+=15; pthread_mutex_unlock(&mutex); break;
+            case '\e': gameOn = 0; break;
         }
     }
 
-    //Game Code!
-
-    
     //End Of Program
     endwin();
     return 1;
-}      marioY--;
-            printMarioSide(marioX, marioY);
-            iTwo++;
-        }
-        pthread_mutex_unlock(&screenMutex);
-        refresh();
-        usleep(10000);
-    }
-       
+}
