@@ -14,6 +14,11 @@ volatile int xVelocity=0, yVelocity=0;
 int gameOn = 1;
 int width, height;
 
+int jump = 0;
+int right = 0;
+int left = 0;
+int crouch = 1;
+
 void* marioDrawFunction(void* arg){
     int marioX = 20;
     int marioY = 50;
@@ -22,6 +27,23 @@ void* marioDrawFunction(void* arg){
     printMarioSide(marioX, marioY);
     while (gameOn){
         pthread_mutex_lock(&mutex);
+        if(jump){
+            if (checkBottom(marioX, marioY)!=1){
+                yVelocity+=30;
+            }
+            jump = 0;
+        }
+
+        if(right){
+            if (xVelocity<60){
+                xVelocity+=15;
+            }else{
+                xVelocity=60;
+            }
+            right = 0;
+        }
+
+
         if (checkBottom(marioX, marioY) == 1 && yVelocity <= 0){
             yVelocity--;
         }else if(checkBottom(marioX, marioY+1) == 0 && yVelocity < 0){
@@ -52,7 +74,7 @@ void* marioDrawFunction(void* arg){
         }
         pthread_mutex_unlock(&mutex);
         refresh();
-        usleep(10000-100*(abs(xVelocity)+abs(yVelocity)));
+        usleep(15000-100*(abs(xVelocity)+abs(yVelocity)));
     }
     return NULL;
 }
@@ -94,10 +116,10 @@ int main(){
     while(gameOn){
         int ch = getch();
         switch(ch){
-            case 'w': pthread_mutex_lock(&mutex); if(yVelocity == 0)yVelocity+=30; pthread_mutex_unlock(&mutex); break;
-            case 'a': pthread_mutex_lock(&mutex); xVelocity-=15; pthread_mutex_unlock(&mutex); break;;
-            case 's': ; break;
-            case 'd': pthread_mutex_lock(&mutex); xVelocity+=15; pthread_mutex_unlock(&mutex); break;
+            case 'w': pthread_mutex_lock(&mutex); jump = 1; pthread_mutex_unlock(&mutex); break;
+            case 'a': pthread_mutex_lock(&mutex); left = 1; pthread_mutex_unlock(&mutex); break;;
+            case 's': pthread_mutex_lock(&mutex); crouch = 1; pthread_mutex_unlock(&mutex); break;
+            case 'd': pthread_mutex_lock(&mutex); right = 1; pthread_mutex_unlock(&mutex); break;
             case '\e': gameOn = 0; break;
         }
     }
@@ -105,13 +127,3 @@ int main(){
     endwin();
     return 1;
 }
-
-//Current bugs and likely fixes:
-//
-//                  Double Jump when velocity is 0
-//                  Check if mario is on the ground inside the game loop in order to change velocity,
-//                  to do this instead of directly changing velocity in case, change a jumpRequest
-//                  variable and then use that to do the logic in the main game loop!
-//
-//                  Breaks if w is pressed while d is held down
-//                  Caused by a negtive Usleep, add max velocitys!
