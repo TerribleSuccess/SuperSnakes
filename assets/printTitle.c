@@ -1,19 +1,10 @@
 #include <curses.h>
-#include <sys/ioctl.h>
 #include "../main.h"
 
 
-void printTitle(){
-    int width;
-    int height;
-    struct winsize wbuf;
-    if(ioctl(0, TIOCGWINSZ, &wbuf) != - COLOR_PAIR_WHITE){
-        width = wbuf.ws_col;
-        height = wbuf.ws_row;
-    }
-
-    int x = width/COLOR_PAIR_RED-40;
-    int y = height/4;
+void printTitle(int xIn, int yIn){
+    int x = xIn;
+    int y = yIn;
     
     wbkgd(stdscr, COLOR_PAIR(COLOR_PAIR_BABYBLUE));
 
