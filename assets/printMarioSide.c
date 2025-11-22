@@ -39,6 +39,27 @@ void deleteMarioSide(int xIn, int yIn){
     attron(COLOR_PAIR(COLOR_PAIR_BABYBLUE)); printw("                        ");
 }
 
+int checkTop(int xIn, int yIn){
+    int x = xIn;
+    int y = yIn;
+    if ((PAIR_NUMBER(mvinch(y, x+6))    == COLOR_PAIR_BABYBLUE) &&
+        (PAIR_NUMBER(mvinch(y, x+12))   == COLOR_PAIR_BABYBLUE) &&
+        (PAIR_NUMBER(mvinch(y+1, x+4))  == COLOR_PAIR_BABYBLUE) &&
+        (PAIR_NUMBER(mvinch(y+1, x+18)) == COLOR_PAIR_BABYBLUE)){
+        return 1;
+    }
+    return 0;
+}
+
+int checkBottom(int xIn, int yIn){
+    int x = xIn;
+    int y = yIn;
+    if ((PAIR_NUMBER(mvinch(y+16, x+6))  == COLOR_PAIR_BABYBLUE) && (PAIR_NUMBER(mvinch(y+16, x+12)) == COLOR_PAIR_BABYBLUE)){
+        return 1;
+    }
+    return 0;
+}
+
 void printMarioSide(int xIn, int yIn){
     int x = xIn;
     int y = yIn;
