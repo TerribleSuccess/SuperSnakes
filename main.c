@@ -4,6 +4,7 @@
 #include "main.h"
 #include <pthread.h>
 #include <stdlib.h>
+#include <math.h> 
 
 pthread_t drawMario;
 pthread_t jumpMario;
@@ -11,15 +12,13 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 volatile int xVelocity=0, yVelocity=0;
 int gameOn = 1;
-
-void right(){
-    pthread_mutex_lock(&mutex);
-    pthread_mutex_unlock(&mutex);
-}
+int width, height;
 
 void* marioDrawFunction(void* arg){
     int marioX = 20;
     int marioY = 50;
+
+    int nextFloor = 1;
     printMarioSide(marioX, marioY);
     while (gameOn){
         pthread_mutex_lock(&mutex);
@@ -30,10 +29,21 @@ void* marioDrawFunction(void* arg){
         }
         if (xVelocity != 0 || yVelocity != 0){
             deleteMarioSide(marioX, marioY);
-            if(xVelocity <0)marioX++;
+
             if(yVelocity <0)marioY++;
-            if(xVelocity >0)marioX++;
             if(yVelocity >0)marioY--;
+
+            if(xVelocity <0);
+
+            if(xVelocity > 0){
+                initializeFloor(width, height, nextFloor);
+                if (nextFloor<4){
+                    nextFloor++;
+                }else{
+                    nextFloor = 0;
+                }
+            }
+
             printMarioSide(marioX, marioY);
             
             if (xVelocity < 0) xVelocity++;
@@ -42,15 +52,13 @@ void* marioDrawFunction(void* arg){
         }
         pthread_mutex_unlock(&mutex);
         refresh();
-        sleep(1);
+        usleep(10000-100*(abs(xVelocity)+abs(yVelocity)));
     }
     return NULL;
 }
 
 
 int main(){
-    int width;
-    int height;
     struct winsize wbuf;
     if(ioctl(0, TIOCGWINSZ, &wbuf) != - 1){
         width = wbuf.ws_col;
@@ -64,8 +72,6 @@ int main(){
     keypad(stdscr, TRUE);
     
     //Setup Title Screen
-
-  
     initializeColors();
     wbkgd(stdscr, COLOR_PAIR_BABYBLUE);
     refresh();
@@ -75,21 +81,12 @@ int main(){
     //Start Game on Char input
     int ch = getch();
 
-
     clearScreenSlow();
     refresh();
-    usleep(10000);
 
-    printBrick(0, height-4);
-    printBrick(10, height-4);
-    printBrick(20, height-4);
-    printBrick(30, height-4);
-    printBrick(40, height-4);
-    printBrick(50, height-4);
-    printBrick(60, height-4);
-    printBrick(70, height-4);
-    printBrick(80, height-4);
-    printBrick(90, height-4);
+    usleep(1000);
+
+    initializeFloor(width, height, 0);
     refresh();
 
     pthread_create(&drawMario, NULL, marioDrawFunction, NULL);
@@ -104,8 +101,17 @@ int main(){
             case '\e': gameOn = 0; break;
         }
     }
-
     //End Of Program
     endwin();
     return 1;
 }
+
+//Current bugs and likely fixes:
+//
+//                  Double Jump when velocity is 0
+//                  Check if mario is on the ground inside the game loop in order to change velocity,
+//                  to do this instead of directly changing velocity in case, change a jumpRequest
+//                  variable and then use that to do the logic in the main game loop!
+//
+//                  Breaks if w is pressed while d is held down
+//                  Caused by a negtive Usleep, add max velocitys!

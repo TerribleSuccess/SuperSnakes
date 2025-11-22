@@ -19,20 +19,20 @@
 void initializeColors(void);
 
 
-
 //Title Screen
 void displayTitleScreen(void);
 void printTitle(int, int);
 void printTitleText(int, int);
 void clearScreenSlow(void);
 
-void printBrick(int, int);
+//Ground
+int printBrick(int, int, int);
+void initializeFloor(int, int, int);
 
+//Mario
 int checkTop(int, int);
 int checkBottom(int, int);
 void printMarioSide(int, int);
 void deleteMarioSide(int, int);
-
-void jump(int, int);
 
 #endif
