@@ -20,7 +20,7 @@ void printTitleText(int xIn, int yIn){
         }
     }
     
-    mvprintw(y+1, x+14,"Created By: Ryan C and Michael C");
+    mvprintw(y+1, x+14,"Created By: Ryan P and Michael C");
     mvprintw(y+2, x+6,"To control mario utilize WASD or the arrow keys");
     mvprintw(y+3, x+13,"To exit the game press the esc key");
     mvprintw(y+4, x+18,"Press any key to start!");

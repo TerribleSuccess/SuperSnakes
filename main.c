@@ -6,20 +6,56 @@
 #include <stdlib.h>
 #include <math.h> 
 
-pthread_t drawMario;
-pthread_t jumpMario;
+// Thread creation
+pthread_t renderThread;
+pthread_t physicsThread;
+pthread_t inputThread;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-volatile int xVelocity=0, yVelocity=0;
-int gameOn = 1;
+volatile int gameOn = 1;
+
+// Physics
+volatile int marioX = 20;
+volatile int marioY = 30;
+volatile int prevMarioX = 20;
+volatile int prevMarioY = 30;
+volatile int xVelocity = 0;
+volatile int yVelocity = 0;
+
+// Inputs
+volatile int jump = 0;
+volatile int right = 0;
+volatile int left = 0;
+volatile int crouch = 1;
+
+// Window size
 int width, height;
 
-int jump = 0;
-int right = 0;
-int left = 0;
-int crouch = 1;
+void* renderFunction(void* arg) {
+    int nextFloor = 1;
+    printMarioSide(marioX, marioY);
 
-void* marioDrawFunction(void* arg){
+    while (gameOn) {
+        pthread_mutex_lock(&mutex);
+
+        deleteMarioSide(prevMarioX, prevMarioY);
+
+        printMarioSide(marioX, marioY);
+
+        prevMarioX = marioX;
+        prevMarioY = marioY;
+
+        pthread_mutex_unlock(&mutex);
+
+        refresh();
+        usleep(16000); // fps limiter
+    }
+    return NULL;
+}
+
+// old draw function for reference
+/*
+void* marioDrawFunction(void* arg) {
     int marioX = 20;
     int marioY = 50;
 
@@ -78,6 +114,69 @@ void* marioDrawFunction(void* arg){
     }
     return NULL;
 }
+*/
+
+void* physicsFunction(void* arg) {
+    while (gameOn) {
+        pthread_mutex_lock(&mutex);
+
+        if (right) {
+            xVelocity = (xVelocity < 60) ? xVelocity + 6 : 60;
+            right = 0;
+        }
+        if (left) {
+            xVelocity = (xVelocity > -60) ? xVelocity - 6 : -60;
+            left = 0;
+        }
+        if (jump) {
+            if (checkBottom(marioX, marioY) == 1) {
+                yVelocity = 30;
+            }
+            jump = 0;
+        }
+
+        if (checkBottom(marioX, marioY) != 1) {
+            yVelocity -= 2;
+        } else if (yVelocity < 0) {
+            yVelocity = 0;
+        }
+
+        marioX += (xVelocity > 0) ? 1 : (xVelocity < 0 ? -1 : 0);
+        marioY -= (yVelocity > 0 ) ? 1 : 0;
+        marioY += (yVelocity < 0) ? 1 : 0;
+
+        if (xVelocity > 0) xVelocity--;
+        if (xVelocity < 0) xVelocity++;
+        if (yVelocity > 0) yVelocity--;
+        if (yVelocity < 0) yVelocity++;
+
+        pthread_mutex_unlock(&mutex);
+
+        usleep(8000); // adjust as needed for physics updates
+    }
+
+    return NULL;
+}
+
+void* inputFunction(void* arg) {
+    while (gameOn) {
+        int ch = getch(); 
+
+        pthread_mutex_lock(&mutex);
+        switch (ch) {
+            case 'w': jump = 1; break;
+            case 'a': left = 1; break;
+            case 's': crouch = 1; break;
+            case 'd': right = 1; break;
+            case '\e': gameOn = 0; break;
+            default: break;
+        }
+        pthread_mutex_unlock(&mutex);
+
+        usleep(5000); 
+    }
+    return NULL;
+}
 
 
 int main(){
@@ -101,7 +200,7 @@ int main(){
     printTitleText(width/2-30, height/4+16);
 
     //Start Game on Char input
-    int ch = getch();
+    getch();
 
     clearScreenSlow();
     refresh();
@@ -111,17 +210,12 @@ int main(){
     initializeFloor(width, height, 0);
     refresh();
 
-    pthread_create(&drawMario, NULL, marioDrawFunction, NULL);
+    pthread_create(&renderThread, NULL, renderFunction, NULL);
+    pthread_create(&physicsThread, NULL, physicsFunction, NULL);
+    pthread_create(&inputThread, NULL, inputFunction, NULL);
 
-    while(gameOn){
-        int ch = getch();
-        switch(ch){
-            case 'w': pthread_mutex_lock(&mutex); jump = 1; pthread_mutex_unlock(&mutex); break;
-            case 'a': pthread_mutex_lock(&mutex); left = 1; pthread_mutex_unlock(&mutex); break;;
-            case 's': pthread_mutex_lock(&mutex); crouch = 1; pthread_mutex_unlock(&mutex); break;
-            case 'd': pthread_mutex_lock(&mutex); right = 1; pthread_mutex_unlock(&mutex); break;
-            case '\e': gameOn = 0; break;
-        }
+    while (gameOn) {
+        usleep(10000);
     }
     //End Of Program
     endwin();

@@ -10,7 +10,7 @@ void deleteMarioSide(int xIn, int yIn){
     move(y+1, x+4);
     attron(COLOR_PAIR(COLOR_PAIR_BABYBLUE)); printw("                    ");
     move(y+2, x+4);
-    attron(COLOR_PAIR(COLOR_PAIR_BABYBLUE)); printw("              ");
+    attron(COLOR_PAIR(COLOR_PAIR_BABYBLUE)); printw("                ");
     move(y+3, x+2);
     attron(COLOR_PAIR(COLOR_PAIR_BABYBLUE)); printw("                      ");
     move(y+4, x+2);
