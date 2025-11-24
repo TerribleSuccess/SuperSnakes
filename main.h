@@ -35,4 +35,5 @@ int checkBottom(int, int);
 void printMarioSide(int, int);
 void deleteMarioSide(int, int);
 
+
 #endif

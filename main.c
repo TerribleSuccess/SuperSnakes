@@ -4,7 +4,8 @@
 #include "main.h"
 #include <pthread.h>
 #include <stdlib.h>
-#include <math.h> 
+#include <math.h>
+#include "objects/mario.h"
 
 // Thread creation
 pthread_t renderThread;
@@ -13,14 +14,7 @@ pthread_t inputThread;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 volatile int gameOn = 1;
-
-// Physics
-volatile int marioX = 20;
-volatile int marioY = 30;
-volatile int prevMarioX = 20;
-volatile int prevMarioY = 30;
-volatile int xVelocity = 0;
-volatile int yVelocity = 0;
+Mario mario;
 
 // Inputs
 volatile int jump = 0;
@@ -33,18 +27,12 @@ int width, height;
 
 void* renderFunction(void* arg) {
     int nextFloor = 1;
-    printMarioSide(marioX, marioY);
+    drawMario(&mario);
 
     while (gameOn) {
         pthread_mutex_lock(&mutex);
-
-        deleteMarioSide(prevMarioX, prevMarioY);
-
-        printMarioSide(marioX, marioY);
-
-        prevMarioX = marioX;
-        prevMarioY = marioY;
-
+        eraseMario(&mario);
+        drawMario(&mario);
         pthread_mutex_unlock(&mutex);
 
         refresh();
@@ -120,35 +108,7 @@ void* physicsFunction(void* arg) {
     while (gameOn) {
         pthread_mutex_lock(&mutex);
 
-        if (right) {
-            xVelocity = (xVelocity < 60) ? xVelocity + 6 : 60;
-            right = 0;
-        }
-        if (left) {
-            xVelocity = (xVelocity > -60) ? xVelocity - 6 : -60;
-            left = 0;
-        }
-        if (jump) {
-            if (checkBottom(marioX, marioY) == 1) {
-                yVelocity = 30;
-            }
-            jump = 0;
-        }
-
-        if (checkBottom(marioX, marioY) != 1) {
-            yVelocity -= 2;
-        } else if (yVelocity < 0) {
-            yVelocity = 0;
-        }
-
-        marioX += (xVelocity > 0) ? 1 : (xVelocity < 0 ? -1 : 0);
-        marioY -= (yVelocity > 0 ) ? 1 : 0;
-        marioY += (yVelocity < 0) ? 1 : 0;
-
-        if (xVelocity > 0) xVelocity--;
-        if (xVelocity < 0) xVelocity++;
-        if (yVelocity > 0) yVelocity--;
-        if (yVelocity < 0) yVelocity++;
+        runMarioPhysics(&mario, &right, &left, &jump, &crouch);
 
         pthread_mutex_unlock(&mutex);
 
@@ -209,6 +169,8 @@ int main(){
 
     initializeFloor(width, height, 0);
     refresh();
+    
+    mario = createMario(height);
 
     pthread_create(&renderThread, NULL, renderFunction, NULL);
     pthread_create(&physicsThread, NULL, physicsFunction, NULL);

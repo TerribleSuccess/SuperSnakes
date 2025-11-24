@@ -14,6 +14,7 @@
 //     mvprintw(y+3, x, "__|____|__");
 // }
 
+
 int printBrick(int xIn, int yIn, int sequence){
     int x = xIn;
     int y = yIn;
