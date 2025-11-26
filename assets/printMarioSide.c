@@ -168,6 +168,7 @@ void deleteMarioSideLeft(int xIn, int yIn){
     int x = xIn;
     int y = yIn;
 
+<<<<<<< HEAD
     safePrint(y+0,  x+8,  "              ", COLOR_PAIR_BABYBLUE);
     safePrint(y+1,  x+2,  "                    ", COLOR_PAIR_BABYBLUE);
     safePrint(y+2,  x+6,  "                ", COLOR_PAIR_BABYBLUE);
@@ -192,6 +193,31 @@ void printMarioSideLeft(int x, int y) {
     // Row 0
     safePrint(y+0, x+8, "            ", COLOR_PAIR_RED);
 
+=======
+    safePrint(y+0,  x+8, "            ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+1,  x+2, "                    ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+2,  x+8, "                ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+3,  x+2, "                      ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+4,  x+0, "                        ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+5,  x+2, "                      ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+6,  x+4, "                ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+7,  x+8, "              ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+8,  x+4, "                    ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+9,  x+2, "                        ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+10, x+2, "                        ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+11, x+2,   "                        ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+12, x+2,   "                        ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+13, x+6, "                ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+14, x+2, "                      ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+15, x+2, "                        ", COLOR_PAIR_BABYBLUE);
+}
+
+
+void printMarioSideLeft(int x, int y) {
+    // Row 0
+    safePrint(y+0, x+8, "            ", COLOR_PAIR_RED);
+
+>>>>>>> 8ea71c2d7820b96703a5908641a220914e549d04
     // Row 1
     safePrint(y+1, x+2, "                    ", COLOR_PAIR_RED);
 
