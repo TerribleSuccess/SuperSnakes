@@ -4,16 +4,8 @@
 #include "main.h"
 #include <stdlib.h>
 #include <math.h>
-#include "objects/mario.h"
 
-// Thread creation
-pthread_t renderThread;
-pthread_t physicsThread;
-pthread_t inputThread;
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-volatile int gameOn = 1;
-Mario mario;
+int gameOn = 1;
 
 // Inputs
 volatile int jump = 0;
@@ -24,117 +16,124 @@ volatile int crouch = 1;
 // Window size
 int width, height;
 
-void* renderFunction(void* arg) {
-    int nextFloor = 1;
-    drawMario(&mario);
 
-    while (gameOn) {
-        pthread_mutex_lock(&mutex);
-        eraseMario(&mario);
-        drawMario(&mario);
-        pthread_mutex_unlock(&mutex);
+//Mario
+typedef struct {
+    int x;
+    int y;
+    int width;
+    int height;
+    int xVelocity;
+    int yVelocity;
+    int facing;
+    int skidding;
+} Mario;
 
-        refresh();
-        usleep(16000); // fps limiter
+Mario m;
+
+const int ACCEL_GROUND = 4;
+const int ACCEL_AIR = 2;
+const int MAX_SPEED_GROUND = 6;
+const int MAX_SPEED_AIR = 3;
+const int FRICTION = 2; 
+const int SKID_DECEL = 2;
+const int GRAVITY = 2; 
+const int JUMP_VEL = 40; 
+
+const int FRAMES_PER_SECOND = 60;
+
+void gameLoop() {
+    if (m.facing == 1) {
+        deleteMarioSide(m.x, m.y);
+    } else if (m.facing == -1) {
+        deleteMarioSideLeft(m.x, m.y);
     }
-    return NULL;
-}
 
-// old draw function for reference
-/*
-void* marioDrawFunction(void* arg) {
-    int marioX = 20;
-    int marioY = 50;
-
-    int nextFloor = 1;
-    printMarioSide(marioX, marioY);
-    while (gameOn){
-        pthread_mutex_lock(&mutex);
-        if(jump){
-            if (checkBottom(marioX, marioY)!=1){
-                yVelocity+=30;
-            }
-            jump = 0;
+    int onGround = !checkBottom(m.x, m.y);
+    if (jump){
+        if (onGround) {
+            m.yVelocity = JUMP_VEL;
         }
+    }
 
-        if(right){
-            if (xVelocity<60){
-                xVelocity+=15;
+    if (!onGround) {
+        m.yVelocity-= GRAVITY;
+    } else if (m.yVelocity < 0) {
+        m.yVelocity = 0;
+    }
+
+    int accel = onGround ? ACCEL_GROUND : ACCEL_AIR;
+    int maxSpeed = onGround ? MAX_SPEED_GROUND : MAX_SPEED_AIR;
+
+    int direction = 0;
+    if(right){
+        direction = 1;
+    }
+    
+    if(left){
+        direction = -1;
+    }
+
+   
+    if (onGround && direction != 0 && direction != m.facing && m.xVelocity != 0) {
+        m.skidding = 1;
+        if (m.xVelocity > 0) {
+            m.xVelocity-=SKID_DECEL;
+            if (m.xVelocity > 0) {
+                m.xVelocity = 0;
+            }
+        } else if (m.xVelocity < 0) {
+            m.xVelocity+=SKID_DECEL;
+            if (m.xVelocity < 0) {
+                m.xVelocity = 0;
+            }
+        }
+    } else {
+        m.skidding = 0;
+        m.xVelocity+=accel * direction;
+        if (m.xVelocity > maxSpeed) m.xVelocity = maxSpeed;
+        if (m.xVelocity < -maxSpeed) m.xVelocity = -maxSpeed;
+    }
+
+    if (onGround && direction == 0 && !m.skidding) {
+        if (m.xVelocity > 0) {
+            m.xVelocity-=FRICTION;
+            if (m.xVelocity < 0) m.xVelocity = 0;
+        } else if (m.xVelocity < 0) {
+            m.xVelocity+=FRICTION;
+            if (m.xVelocity >0) m.xVelocity = 0;
+        }
+    }
+
+
+    if (direction != 0) {
+        m.facing = direction;
+    }
+
+
+    if (m.yVelocity != 0){
+        m.y += (m.yVelocity < 0) ? 1 : -1;
+    }
+
+     if (m.xVelocity != 0) {
+        if (m.xVelocity > 0 && checkRight(m.x, m.y)){
+            m.facing = 1;
+            if (m.x < width/2-20){
+                m.x+=m.xVelocity;
             }else{
-                xVelocity=60;
+                eviornment();
             }
-            right = 0;
+        }else if (m.xVelocity < 0 && m.x > 2){
+            m.x+=m.xVelocity;
         }
-
-
-        if (checkBottom(marioX, marioY) == 1 && yVelocity <= 0){
-            yVelocity--;
-        }else if(checkBottom(marioX, marioY+1) == 0 && yVelocity < 0){
-            yVelocity = 0;
-        }
-        if (xVelocity != 0 || yVelocity != 0){
-            deleteMarioSide(marioX, marioY);
-
-            if(yVelocity <0)marioY++;
-            if(yVelocity >0)marioY--;
-
-            if(xVelocity <0);
-
-            if(xVelocity > 0){
-                initializeFloor(width, height, nextFloor);
-                if (nextFloor<4){
-                    nextFloor++;
-                }else{
-                    nextFloor = 0;
-                }
-            }
-
-            printMarioSide(marioX, marioY);
-            
-            if (xVelocity < 0) xVelocity++;
-            if (xVelocity > 0) xVelocity--;
-            if (yVelocity > 0) yVelocity--; 
-        }
-        pthread_mutex_unlock(&mutex);
-        refresh();
-        usleep(15000-100*(abs(xVelocity)+abs(yVelocity)));
-    }
-    return NULL;
-}
-*/
-
-void* physicsFunction(void* arg) {
-    while (gameOn) {
-        pthread_mutex_lock(&mutex);
-
-        runMarioPhysics(&mario, &right, &left, &jump, &crouch);
-
-        pthread_mutex_unlock(&mutex);
-
-        usleep(8000); // adjust as needed for physics updates
+    } 
+    if (m.facing == 1) { 
+        printMarioSide(m.x, m.y);
+    }else if (m.facing == -1) {
+        printMarioSideLeft(m.x, m.y);
     }
 
-    return NULL;
-}
-
-void* inputFunction(void* arg) {
-    while (gameOn) {
-        int ch = getch(); 
-
-        pthread_mutex_lock(&mutex);
-        switch (ch) {
-            case 'w': jump = 1; break;
-            case 'a': left = 1; break;
-            case 's': crouch = 1; break;
-            case 'd': right = 1; break;
-            case '\e': gameOn = 0; break;
-            default: break;
-        }
-        pthread_mutex_unlock(&mutex);
-
-        usleep(5000); 
-    }
-    return NULL;
+    refresh();
 }
 
 int main(){
@@ -169,15 +168,33 @@ int main(){
 
     initializeFloor(width, height, 0);
     refresh();
-    
-    mario = createMario(height);
 
-    pthread_create(&renderThread, NULL, renderFunction, NULL);
-    pthread_create(&physicsThread, NULL, physicsFunction, NULL);
-    pthread_create(&inputThread, NULL, inputFunction, NULL);
+    m.x = 20;
+    m.y = height - 16 - 5;
+    m.width = 3;
+    m.height = 3;
+    m.xVelocity = 0;
+    m.yVelocity = 0;
+    m.facing = 1;
+    
+    printMarioSide(m.x, m.y);
+    refresh();
 
     while (gameOn) {
-        usleep(10000);
+        right = left = jump = crouch = 0;
+        int ch;
+        while ((ch = getch()) != ERR) {
+            switch (ch) {
+                case 'a': left = 1; break;
+                case 'd': right= 1; break;
+                case 'w': jump = 1; break;
+                case 's': crouch = 1; break;
+                case '\e': gameOn = 0; break;
+            }
+        }
+
+        gameLoop();
+        usleep(1000000 / FRAMES_PER_SECOND);
     }
 
     //End Of Program
