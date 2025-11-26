@@ -5,7 +5,6 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <math.h>
-#include "objects/mario.h"
 
 // Thread creation
 pthread_t renderThread;
@@ -14,7 +13,6 @@ pthread_t inputThread;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 volatile int gameOn = 1;
-Mario mario;
 
 // Inputs
 volatile int jump = 0;
@@ -25,119 +23,91 @@ volatile int crouch = 1;
 // Window size
 int width, height;
 
-void* renderFunction(void* arg) {
-    int nextFloor = 1;
-    drawMario(&mario);
 
-    while (gameOn) {
-        pthread_mutex_lock(&mutex);
-        eraseMario(&mario);
-        drawMario(&mario);
-        pthread_mutex_unlock(&mutex);
-
-        refresh();
-        usleep(16000); // fps limiter
-    }
-    return NULL;
-}
-
-// old draw function for reference
-/*
-void* marioDrawFunction(void* arg) {
-    int marioX = 20;
-    int marioY = 50;
-
-    int nextFloor = 1;
-    printMarioSide(marioX, marioY);
+//Mario
+typedef struct {
+    volatile int x;
+    volatile int y;
+    volatile int width;
+    int height;
+    volatile int xVelocity;
+    volatile int yVelocity;
+    volatile int facing;
+} Mario;
+Mario m;
+void* gameLoop(void* arg) {
     while (gameOn){
         pthread_mutex_lock(&mutex);
-        if(jump){
-            if (checkBottom(marioX, marioY)!=1){
-                yVelocity+=30;
+        int localJump      = jump;
+        int localRight     = right;
+        int localLeft      = left;
+
+        jump = 0;
+        right = 0;
+        left = 0;
+        pthread_mutex_unlock(&mutex);
+
+        if (m.facing) {
+            deleteMarioSide(m.x, m.y);
+        } else {
+            deleteMarioSideLeft(m.x, m.y);
+        }
+
+        if(localJump){
+            if (checkBottom(m.x, m.y)!=1){
+                m.yVelocity+=30;
             }
-            jump = 0;
         }
 
-        if(right){
-            if (xVelocity<60){
-                xVelocity+=15;
-            }else{
-                xVelocity=60;
-            }
-            right = 0;
+        if(localRight){
+            m.xVelocity = (m.xVelocity <  45) ? m.xVelocity + 15 :  45;
+        }
+        
+        if(localLeft){
+            m.xVelocity = (m.xVelocity > -45) ? m.xVelocity - 15 : -45;
+        }
+
+        if (checkBottom(m.x, m.y) && m.yVelocity <= 0){
+            m.yVelocity--;
+        }else if(!checkBottom(m.x, m.y) && m.yVelocity < 0){
+            m.yVelocity = 0;
         }
 
 
-        if (checkBottom(marioX, marioY) == 1 && yVelocity <= 0){
-            yVelocity--;
-        }else if(checkBottom(marioX, marioY+1) == 0 && yVelocity < 0){
-            yVelocity = 0;
+        if (m.yVelocity != 0){
+            m.y += (m.yVelocity < 0) ? 1 : -1;
         }
-        if (xVelocity != 0 || yVelocity != 0){
-            deleteMarioSide(marioX, marioY);
 
-            if(yVelocity <0)marioY++;
-            if(yVelocity >0)marioY--;
-
-            if(xVelocity <0);
-
-            if(xVelocity > 0){
-                initializeFloor(width, height, nextFloor);
-                if (nextFloor<4){
-                    nextFloor++;
+        if (m.xVelocity != 0){
+            if (m.xVelocity > 0 && checkRight(m.x, m.y)){
+                m.facing = 1;
+                if (m.x < width/2-20){
+                    m.x++;
                 }else{
-                    nextFloor = 0;
+                    eviornment();
                 }
+            }else if (m.xVelocity < 0 && m.x > 1){
+                m.facing=0;
+                m.x--;
             }
-
-            printMarioSide(marioX, marioY);
-            
-            if (xVelocity < 0) xVelocity++;
-            if (xVelocity > 0) xVelocity--;
-            if (yVelocity > 0) yVelocity--; 
         }
-        pthread_mutex_unlock(&mutex);
+    
+        if (m.xVelocity > 0) m.xVelocity--;
+        if (m.xVelocity < 0) m.xVelocity++;
+        if (m.yVelocity > 0) m.yVelocity--;
+        if (m.yVelocity < 0) m.yVelocity++;  
+
+        if (m.facing){
+            printMarioSide(m.x, m.y);
+        }else{
+            printMarioSideLeft(m.x, m.y);
+        }
+
         refresh();
-        usleep(15000-100*(abs(xVelocity)+abs(yVelocity)));
+        usleep(15000-100*(abs(m.xVelocity)+abs(m.yVelocity)));
     }
     return NULL;
 }
-*/
-
-void* physicsFunction(void* arg) {
-    while (gameOn) {
-        pthread_mutex_lock(&mutex);
-
-        runMarioPhysics(&mario, &right, &left, &jump, &crouch);
-
-        pthread_mutex_unlock(&mutex);
-
-        usleep(8000); // adjust as needed for physics updates
-    }
-
-    return NULL;
-}
-
-void* inputFunction(void* arg) {
-    while (gameOn) {
-        int ch = getch(); 
-
-        pthread_mutex_lock(&mutex);
-        switch (ch) {
-            case 'w': jump = 1; break;
-            case 'a': left = 1; break;
-            case 's': crouch = 1; break;
-            case 'd': right = 1; break;
-            case '\e': gameOn = 0; break;
-            default: break;
-        }
-        pthread_mutex_unlock(&mutex);
-
-        usleep(5000); 
-    }
-    return NULL;
-}
-
 
 int main(){
     struct winsize wbuf;
@@ -162,23 +132,41 @@ int main(){
     //Start Game on Char input
     getch();
 
+    clear();
     clearScreenSlow();
     refresh();
 
-    usleep(1000);
-
     initializeFloor(width, height, 0);
     refresh();
-    
-    mario = createMario(height);
 
-    pthread_create(&renderThread, NULL, renderFunction, NULL);
-    pthread_create(&physicsThread, NULL, physicsFunction, NULL);
-    pthread_create(&inputThread, NULL, inputFunction, NULL);
+    m.x = 20;
+    m.y = 50;
+    m.width = 3;
+    m.height = 3;
+    m.xVelocity = 0;
+    m.yVelocity = 0;
+    m.facing = 1;
+    
+    printMarioSide(m.x, m.y);
+    refresh();
+
+    pthread_create(&renderThread, NULL, gameLoop, NULL);
 
     while (gameOn) {
-        usleep(10000);
+        int ch = getch(); 
+        pthread_mutex_lock(&mutex);
+        switch (ch) {
+            case 'w': jump = 1; break;
+            case 'a': left = 1; break;
+            case 's': crouch = 1; break;
+            case 'd': right = 1; break;
+            case '\e': gameOn = 0; break;
+            default: break;
+        }
+        pthread_mutex_unlock(&mutex);
+        usleep(5000); 
     }
+
     //End Of Program
     endwin();
     return 1;

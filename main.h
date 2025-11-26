@@ -11,10 +11,14 @@
 #define COLOR_PAIR_YELLOW 7
 #define COLOR_PAIR_BABYBLUE 8
 #define COLOR_PAIR_TITLETEXT 9
+#define COLOR_PAIR_GREEN 10
 
 #define COLOR_BROWN 8
 #define COLOR_SKIN 9
 #define COLOR_BABYBLUE 10
+
+extern int width;
+extern int height;
 
 void initializeColors(void);
 
@@ -28,12 +32,25 @@ void clearScreenSlow(void);
 //Ground
 int printBrick(int, int, int);
 void initializeFloor(int, int, int);
+int printPipe(int, int, int, int);
+
+
+void eviornment();
+
+void printBrickBlock(int, int);
+void deleteBrick(int, int);
+void deletePipe(int, int, int);
+void safePrint(int, int, char *, int);
 
 //Mario
 int checkTop(int, int);
 int checkBottom(int, int);
-void printMarioSide(int, int);
-void deleteMarioSide(int, int);
+int checkRight(int, int);
+int checkLeft(int, int);
 
+void printMarioSide(int, int);
+void printMarioSideLeft(int, int);
+void deleteMarioSide(int, int);
+void deleteMarioSideLeft(int, int);
 
 #endif
