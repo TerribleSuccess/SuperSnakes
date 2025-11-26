@@ -1,64 +1,71 @@
 #include <curses.h>
 #include "../main.h"
 
-// OG print brick
 
-// void printBrick(int xIn, int yIn){
-//     int x = xIn;
-//     int y = yIn;
+void printBrickBlock(int xIn, int yIn){
+    int x = xIn;
+    int y = yIn;
 
-//     attron(COLOR_PAIR(COLOR_PAIR_BROWN));
-//     mvprintw(y,   x, "____|____|");
-//     mvprintw(y+1, x, "__|____|__");
-//     mvprintw(y+2, x, "____|____|");
-//     mvprintw(y+3, x, "__|____|__");
-// }
+    safePrint(y,   x, "_|___|__", COLOR_PAIR_BROWN);
+    safePrint(y+1, x, "___|___|", COLOR_PAIR_BROWN);
+    safePrint(y+2, x, "_|___|__", COLOR_PAIR_BROWN);
+    safePrint(y+3, x, "____|___", COLOR_PAIR_BROWN);
+}
+
+void deleteBrick(int xIn, int yIn){
+    int x = xIn;
+    int y = yIn;
+
+    safePrint(y,   x, "        ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+1, x, "        ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+2, x, "        ", COLOR_PAIR_BABYBLUE);
+    safePrint(y+3, x, "        ", COLOR_PAIR_BABYBLUE);
+}
 
 
 int printBrick(int xIn, int yIn, int sequence){
     int x = xIn;
     int y = yIn;
 
-    attron(COLOR_PAIR(COLOR_PAIR_BROWN));
-
     switch (sequence){
     case 0:
-        mvprintw(y,   x, "__");
-        mvprintw(y+1, x, "__");
-        mvprintw(y+2, x, "__");
-        mvprintw(y+3, x, "__");
+
+        safePrint(y,   x, "__", COLOR_PAIR_BROWN);
+        safePrint(y+1, x, "|_", COLOR_PAIR_BROWN);
+        safePrint(y+2, x, "__", COLOR_PAIR_BROWN);
+        safePrint(y+3, x, "|_", COLOR_PAIR_BROWN);
         return 1;
         break;
 
     case 1:
-        mvprintw(y,   x, "__");
-        mvprintw(y+1, x, "|_");
-        mvprintw(y+2, x, "__");
-        mvprintw(y+3, x, "|_");
+        safePrint(y,   x, "__", COLOR_PAIR_BROWN);
+        safePrint(y+1, x, "__", COLOR_PAIR_BROWN);
+        safePrint(y+2, x, "__", COLOR_PAIR_BROWN);
+        safePrint(y+3, x, "__", COLOR_PAIR_BROWN);
         return 2;
         break;
 
     case 2:
-        mvprintw(y,   x, "|_");
-        mvprintw(y+1, x, "__");
-        mvprintw(y+2, x, "|_");
-        mvprintw(y+3, x, "__");
+        safePrint(y,   x, "|_", COLOR_PAIR_BROWN);
+        safePrint(y+1, x, "__", COLOR_PAIR_BROWN);
+        safePrint(y+2, x, "|_", COLOR_PAIR_BROWN);
+        safePrint(y+3, x, "__", COLOR_PAIR_BROWN);
         return 3;
         break;
 
     case 3:
-        mvprintw(y,   x, "__");
-        mvprintw(y+1, x, "_|");
-        mvprintw(y+2, x, "__");
-        mvprintw(y+3, x, "_|");
+        safePrint(y,   x, "__", COLOR_PAIR_BROWN);
+        safePrint(y+1, x, "_|", COLOR_PAIR_BROWN);
+        safePrint(y+2, x, "__", COLOR_PAIR_BROWN);
+        safePrint(y+3, x, "_|", COLOR_PAIR_BROWN);
         return 4;
         break;
 
     case 4:
-        mvprintw(y,   x, "_|");
-        mvprintw(y+1, x, "__");
-        mvprintw(y+2, x, "_|");
-        mvprintw(y+3, x, "__");
+        safePrint(y,   x, "_|", COLOR_PAIR_BROWN);
+        safePrint(y+1, x, "__", COLOR_PAIR_BROWN);
+        safePrint(y+2, x, "_|", COLOR_PAIR_BROWN);
+        safePrint(y+3, x, "__", COLOR_PAIR_BROWN);
         return 0;
         break;
     }
