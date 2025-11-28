@@ -52,10 +52,11 @@ int checkTop(int, int);
 int checkBottom(int, int);
 int checkRight(int, int);
 int checkLeft(int, int);
+void deleteMario(int, int);
 
-void printMarioSide(int, int);
-void printMarioSideLeft(int, int);
-void deleteMarioSide(int, int);
-void deleteMarioSideLeft(int, int);
+void printMarioRight(int, int);
+void printMarioRightJump(int, int);
+void printMarioLeft(int, int);
+void printMarioLeftJump(int, int);
 
 #endif

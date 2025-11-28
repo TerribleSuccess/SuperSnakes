@@ -1,5 +1,4 @@
 #include <curses.h>
-#include <sys/ioctl.h>
 #include "../../main.h"
 
 void clearScreenSlow(){

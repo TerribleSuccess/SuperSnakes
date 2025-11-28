@@ -4,7 +4,6 @@
 #include "main.h"
 #include <stdlib.h>
 #include <math.h>
-#include <locale.h>
 
 int gameOn = 1;
 
@@ -44,11 +43,7 @@ const int JUMP_VEL = 40;
 const int FRAMES_PER_SECOND = 60;
 
 void gameLoop() {
-    if (m.facing == 1) {
-        deleteMarioSide(m.x, m.y);
-    } else if (m.facing == -1) {
-        deleteMarioSideLeft(m.x, m.y);
-    }
+    deleteMario(m.x, m.y);
 
     int onGround = !checkBottom(m.x, m.y);
     if (jump){
@@ -124,14 +119,23 @@ void gameLoop() {
             }else{
                 eviornment();
             }
-        }else if (m.xVelocity < 0 && m.x > 2){
+        }else if (m.xVelocity < 0 && m.x > 2 && checkLeft(m.x, m.y)){
             m.x+=m.xVelocity;
         }
-    } 
+    }
     if (m.facing == 1) { 
-        printMarioSide(m.x, m.y);
+        if (m.yVelocity > 0){
+            printMarioRightJump(m.x, m.y);
+        }else{
+           printMarioRight(m.x, m.y); 
+        }
+        
     }else if (m.facing == -1) {
-        printMarioSideLeft(m.x, m.y);
+        if (m.yVelocity > 0){
+            printMarioLeftJump(m.x, m.y);
+        }else{
+            printMarioLeft(m.x, m.y); 
+        }
     }
 
     refresh();
@@ -144,7 +148,6 @@ int main(){
         height = wbuf.ws_row;
     }
 
-    setlocale(LC_ALL, "");
     initscr();
     cbreak();
     noecho();
@@ -179,7 +182,7 @@ int main(){
     m.yVelocity = 0;
     m.facing = 1;
     
-    printMarioSide(m.x, m.y);
+    printMarioRight(m.x, m.y);
     refresh();
 
     while (gameOn) {
