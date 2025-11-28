@@ -1,5 +1,5 @@
 #include <curses.h>
-#include "../main.h"
+#include "../../main.h"
 
 //Colors are from 0 to 999 not 0 to 255, can convert
 //Non-default colors and color pairs are defined in main.h but included here for reference

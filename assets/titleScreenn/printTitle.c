@@ -1,5 +1,5 @@
 #include <curses.h>
-#include "../main.h"
+#include "../../main.h"
 
 
 void printTitle(int xIn, int yIn){

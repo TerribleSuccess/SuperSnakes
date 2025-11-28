@@ -1,6 +1,6 @@
 #include <curses.h>
 #include <stdlib.h>
-#include "../main.h"
+#include "../../main.h"
 
 int nextFloor = 0;
 int floorOn = 1;
@@ -44,12 +44,12 @@ void eviornment(){
         switch (module){
             case 0:
             floorOn = 1;
-            addPipe(width+20, 12);
-            addPipe(width+60, 18);
-            addPipe(width+100, 24);
-            for (int i = 0; i < 10; i++){
-                addBrick(width+160+i*8, height-40);
-            }
+            addPipe(width, 14);
+            addPipe(width+60, 24);
+            addPipe(width+120, 34);
+            addBrick(width+180, 40);
+            addBrick(width+196, 40);
+            addBrick(width+212, 40);
             break;
          case 1:
             floorOn = 1;
@@ -61,8 +61,8 @@ void eviornment(){
     }
 
     if (floorOn){
-        initializeFloor(width, height, nextFloor);
-        if (nextFloor<4){
+        initializeFloor(nextFloor);
+        if (nextFloor<3){
             nextFloor++;
         }else{
             nextFloor = 0;
@@ -70,11 +70,12 @@ void eviornment(){
     }
 
     for (int i = 0; i < MAX_BRICKS; i++){
-        if (!bricks[i].brickOn)continue;{
-            deleteBrick(bricks[i].x, bricks[i].y);
+        if (!bricks[i].brickOn)continue;
+            deleteBlock(bricks[i].x, height-bricks[i].y);
             bricks[i].x--;
-            printBrickBlock(bricks[i].x, bricks[i].y);
-        }
+            for (int j = 0; j < 4; j++){
+                printBlock(bricks[i].x, height-bricks[i].y);
+            }
         if (bricks[i].x < -40) bricks[i].brickOn = 0;
     }
     

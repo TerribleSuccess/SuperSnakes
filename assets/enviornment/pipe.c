@@ -1,5 +1,5 @@
 #include <curses.h>
-#include "../main.h"
+#include "../../main.h"
 
 void deletePipe(int xIn, int yIn, int height){
     int x = xIn;

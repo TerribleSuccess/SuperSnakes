@@ -1,5 +1,5 @@
 #include <curses.h>
-#include "../main.h"
+#include "../../main.h"
 
 void safePrint(int y, int x, char *string, int color){
     if(y < 0 || y >= height) return;

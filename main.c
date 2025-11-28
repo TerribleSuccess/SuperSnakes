@@ -4,6 +4,7 @@
 #include "main.h"
 #include <stdlib.h>
 #include <math.h>
+#include <locale.h>
 
 int gameOn = 1;
 
@@ -143,6 +144,7 @@ int main(){
         height = wbuf.ws_row;
     }
 
+    setlocale(LC_ALL, "");
     initscr();
     cbreak();
     noecho();
@@ -166,7 +168,7 @@ int main(){
     clearScreenSlow();
     refresh();
 
-    initializeFloor(width, height, 0);
+    initializeFloor(0);
     refresh();
 
     m.x = 20;

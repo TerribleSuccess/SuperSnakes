@@ -1,6 +1,6 @@
 #include <curses.h>
 #include <sys/ioctl.h>
-#include "../main.h"
+#include "../../main.h"
 
 void clearScreenSlow(){
     attron(COLOR_PAIR(COLOR_PAIR_BABYBLUE));

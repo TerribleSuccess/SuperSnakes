@@ -30,16 +30,21 @@ void printTitleText(int, int);
 void clearScreenSlow(void);
 
 //Ground
-int printBrick(int, int, int);
-void initializeFloor(int, int, int);
-int printPipe(int, int, int, int);
-
+void initializeFloor();
 
 void eviornment();
 
-void printBrickBlock(int, int);
+void printBrick(int, int, int);
 void deleteBrick(int, int);
+
+
+
+int printPipe(int, int, int, int);
 void deletePipe(int, int, int);
+void printBlock(int, int);
+void deleteBlock(int, int);
+
+
 void safePrint(int, int, char *, int);
 
 //Mario
