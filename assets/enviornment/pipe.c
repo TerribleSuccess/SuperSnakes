@@ -17,9 +17,10 @@ void deletePipe(int xIn, int yIn, int height){
     }
 }
 
-int printPipe(int xIn, int yIn, int height, int sequence){
+int printPipe(int xIn, int yIn, int heightIn, int sequence){
     int x = xIn;
     int y = yIn;
+    int height = heightIn-4;
 
     switch (sequence){
     case 0:

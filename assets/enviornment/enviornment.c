@@ -48,8 +48,8 @@ void eviornment(){
             addPipe(width+60, 24);
             addPipe(width+120, 34);
             addBrick(width+180, 40);
-            addBrick(width+196, 40);
-            addBrick(width+212, 40);
+            addBrick(width+194, 40);
+            addBrick(width+208, 40);
             break;
          case 1:
             floorOn = 1;
@@ -78,7 +78,6 @@ void eviornment(){
             }
         if (bricks[i].x < -40) bricks[i].brickOn = 0;
     }
-    
 
     for (int i = 0; i < MAX_PIPES; i++) {
         if (!pipes[i].pipeOn) continue;
