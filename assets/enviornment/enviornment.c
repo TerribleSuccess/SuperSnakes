@@ -34,7 +34,30 @@ void addBrick(int x, int y) {
     bricks[brickCount++] = (Brick){1, x, y};
 }
 
+typedef struct {
+    int goombaOn;
+    int x;
+    int y;
+} Goomba;
 
+#define MAX_GOOMBAS 50
+Goomba goombas[MAX_GOOMBAS];
+int goombaCount = 0;
+void addGoomba(int x, int y) {
+    if (goombaCount >= MAX_GOOMBAS) return;
+    goombas[goombaCount++] = (Goomba){1, x, y};
+} 
+
+void deleteGoomba(int xIn, int yIn){
+    int x = xIn;
+    int y = yIn;
+
+    for (int j = 0; j < 8; j++){
+        for (int i = 0; i < 12; i++){
+            safePrint(y+j, x+i, "  ", COLOR_PAIR_BABYBLUE);
+        }
+    }
+}
 
 void eviornment(){
     module = 0;
@@ -56,6 +79,9 @@ void eviornment(){
             addPipe(width, 12);
             addPipe(width+100, 18);
             addPipe(width+200, 24);
+
+            addGoomba(width + 45, 12);
+            addGoomba(width + 145, 12);
             break;
         }
     }
@@ -98,6 +124,14 @@ void eviornment(){
             }
         }
         if (pipes[i].x < -40) pipes[i].pipeOn = 0;
+    }
+
+    for (int i = 0; i < MAX_GOOMBAS; i++){
+        if (!goombas[i].goombaOn) continue;
+        deleteGoomba(goombas[i].x, height - goombas[i].y);
+        goombas[i].x--; 
+        printGoomba(goombas[i].x, height - goombas[i].y);
+        if (goombas[i].x < -12) goombas[i].goombaOn = 0; 
     }
     moduleClock++;
 }

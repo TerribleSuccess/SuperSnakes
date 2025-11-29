@@ -108,7 +108,7 @@ void gameLoop() {
 
 
     if (m.yVelocity != 0){
-        m.y += (m.yVelocity < 0) ? 1 : -1;
+        m.y += (m.yVelocity < 0) ? 1 : (m.y - 1 < 0)  ? 0 : - 1;
     }
 
      if (m.xVelocity != 0) {

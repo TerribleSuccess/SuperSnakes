@@ -41,6 +41,8 @@ void deleteBrick(int, int);
 
 int printPipe(int, int, int, int);
 void deletePipe(int, int, int);
+void printGoomba(int, int);
+void deleteGoomba(int, int);
 void printBlock(int, int);
 void deleteBlock(int, int);
 
