@@ -12,13 +12,16 @@
 #define COLOR_PAIR_BABYBLUE 8
 #define COLOR_PAIR_TITLETEXT 9
 #define COLOR_PAIR_GREEN 10
+#define COLOR_PAIR_BROWNDEATH 11
 
 #define COLOR_BROWN 8
 #define COLOR_SKIN 9
 #define COLOR_BABYBLUE 10
+#define COLOR_BROWNDEATH 11
 
 extern int width;
 extern int height;
+extern int gameOn;
 
 void initializeColors(void);
 

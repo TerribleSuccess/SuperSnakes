@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-int gameOn = 1;
 
+int gameOn = 1;
 // Inputs
 volatile int jump = 0;
 volatile int right = 0;
@@ -184,7 +184,6 @@ int main(){
     
     printMarioRight(m.x, m.y);
     refresh();
-
     while (gameOn) {
         right = left = jump = crouch = 0;
         int ch;

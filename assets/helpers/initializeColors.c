@@ -14,6 +14,9 @@ void initializeColors(){
     init_color(COLOR_YELLOW, 980, 945, 187);
     init_color(COLOR_BABYBLUE,156, 789,999);
 
+    init_color(COLOR_BROWNDEATH, 600, 350, 183);
+
+    init_pair(COLOR_PAIR_BROWNDEATH, COLOR_BROWNDEATH, COLOR_BROWNDEATH);
     init_pair(COLOR_PAIR_WHITE, COLOR_WHITE,   COLOR_WHITE);
     init_pair(COLOR_PAIR_RED, COLOR_RED,     COLOR_RED);
     init_pair(COLOR_PAIR_SKIN, COLOR_SKIN,  COLOR_SKIN);
