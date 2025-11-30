@@ -7,6 +7,7 @@
 
 
 int gameOn = 1;
+
 // Inputs
 volatile int jump = 0;
 volatile int right = 0;
@@ -46,6 +47,11 @@ void gameLoop() {
     deleteMario(m.x, m.y);
 
     int onGround = !checkBottom(m.x, m.y);
+
+    if(checkBottom(m.x, m.y)==2){ //If on goombas head then jump
+        m.yVelocity = JUMP_VEL;
+    }
+
     if (jump){
         if (onGround) {
             m.yVelocity = JUMP_VEL;
@@ -115,12 +121,12 @@ void gameLoop() {
         if (m.xVelocity > 0 && checkRight(m.x, m.y)){
             m.facing = 1;
             if (m.x < width/2-20){
-                m.x+=m.xVelocity;
+                m.x+=m.xVelocity;    //Moving more then 1 space can cause bugs
             }else{
                 eviornment();
             }
         }else if (m.xVelocity < 0 && m.x > 2 && checkLeft(m.x, m.y)){
-            m.x+=m.xVelocity;
+            m.x+=m.xVelocity;     //Moving more then 1 space at a time can cause bugs
         }
     }
     if (m.facing == 1) { 
@@ -137,7 +143,6 @@ void gameLoop() {
             printMarioLeft(m.x, m.y); 
         }
     }
-
     refresh();
 }
 
@@ -173,7 +178,6 @@ int main(){
 
     initializeFloor(0);
     refresh();
-
     m.x = 20;
     m.y = height - 16 - 5;
     m.width = 3;
@@ -202,6 +206,9 @@ int main(){
     }
 
     //End Of Program
+    printWin();
+    sleep(10);
+
     endwin();
     return 1;
 }

@@ -5,6 +5,7 @@
 int nextFloor = 0;
 int floorOn = 1;
 
+int marioTraveled = 0;
 int moduleClock = 200;
 int module;
 
@@ -35,35 +36,38 @@ void addBrick(int x, int y) {
 }
 
 typedef struct {
+    int starOn;
+    int x;
+    int y;
+}Star;
+#define MAX_STARS 5
+Star stars[MAX_STARS];
+int starCount = 0;
+void addStar(int x, int y) {
+    if (starCount >= MAX_STARS) return;
+    stars[starCount++] = (Star){1, x, y};
+}
+
+typedef struct {
     int goombaOn;
     int x;
     int y;
 } Goomba;
-
 #define MAX_GOOMBAS 50
 Goomba goombas[MAX_GOOMBAS];
 int goombaCount = 0;
 void addGoomba(int x, int y) {
     if (goombaCount >= MAX_GOOMBAS) return;
     goombas[goombaCount++] = (Goomba){1, x, y};
-} 
-
-void deleteGoomba(int xIn, int yIn){
-    int x = xIn;
-    int y = yIn;
-
-    for (int j = 0; j < 8; j++){
-        for (int i = 0; i < 12; i++){
-            safePrint(y+j, x+i, "  ", COLOR_PAIR_BABYBLUE);
-        }
-    }
 }
-
+int floorCounter = 0;
 void eviornment(){
     module = 0;
     if (moduleClock>=250){
         moduleClock = 0;
-        module = rand()%2;
+        floorCounter = 0;
+        module = rand()%5;
+        if (marioTraveled >= 100) module = 5;
         switch (module){
             case 0:
             floorOn = 1;
@@ -73,6 +77,7 @@ void eviornment(){
             addBrick(width+180, 40);
             addBrick(width+194, 40);
             addBrick(width+208, 40);
+            addStar(width+200, 60);
             break;
          case 1:
             floorOn = 1;
@@ -83,8 +88,56 @@ void eviornment(){
             addGoomba(width + 45, 12);
             addGoomba(width + 145, 12);
             break;
+
+        case 2:
+            floorOn = 1;
+            addPipe(width, 14);
+            addPipe(width+60, 24);
+            addPipe(width+120, 34);
+
+            addStar(width+200, 60);
+            break;
+
+        case 3:
+            floorOn = 0;
+            addBrick(width+0, 20);
+            addBrick(width+14, 20);
+            addBrick(width+28, 20);
+
+            addBrick(width+100, 30);
+            addBrick(width+114, 30);
+            addBrick(width+128, 30);
+            addGoomba(width+110, 38);
+
+            addBrick(width+180, 40);
+            addBrick(width+194, 40);
+            addBrick(width+208, 40);
+            break;
+
+        case 4:
+            floorOn = 0;
+            addBrick(width+0, 20);
+            addBrick(width+14, 20);
+            addBrick(width+28, 20);
+
+            addBrick(width+100, 40);
+            addBrick(width+114, 40);
+            addBrick(width+128, 40);
+
+            addBrick(width+180, 40);
+            addBrick(width+194, 40);
+            addBrick(width+208, 40);
+            break;
+
+        case 5:
+            floorOn = 1;
+            //End of game
+            break;
+            
         }
     }
+
+    marioTraveled++;
 
     if (floorOn){
         initializeFloor(nextFloor);
@@ -93,6 +146,22 @@ void eviornment(){
         }else{
             nextFloor = 0;
         }
+    }else{
+        for (int i = 0; i < width+8; i += 8) {
+        deleteBrick(i+width-floorCounter, height-4);
+        }
+        floorCounter++;
+    }
+    
+
+    for (int i = 0; i < MAX_STARS; i++){
+        if (!stars[i].starOn)continue;
+            deleteStar(stars[i].x, height-stars[i].y);
+            stars[i].x--;
+            for (int j = 0; j < 4; j++){
+                printStar(stars[i].x, height-stars[i].y);
+            }
+        if (stars[i].x < -40) stars[i].starOn = 0;
     }
 
     for (int i = 0; i < MAX_BRICKS; i++){

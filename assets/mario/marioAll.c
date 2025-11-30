@@ -16,8 +16,14 @@ int checkTop(int xIn, int yIn){
 int checkBottom(int xIn, int yIn){
     int x = xIn;
     int y = yIn;
+    if (y>height-17){
+        gameOn = 0;
+    }
     for (int i = 0; i < 24; i+=2){
-        if (PAIR_NUMBER(mvinch(y+16, x+i)) != COLOR_PAIR_BABYBLUE)return 0;
+        if (PAIR_NUMBER(mvinch(y+16, x+i)) != COLOR_PAIR_BABYBLUE){
+            if(PAIR_NUMBER(mvinch(y+16, x+i)) == COLOR_PAIR_BROWNDEATH) return 2;
+            return 0;
+        }
     }
     return 1;
 }
