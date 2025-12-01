@@ -48,20 +48,64 @@ void addStar(int x, int y) {
     stars[starCount++] = (Star){1, x, y};
 }
 
+
+int mw = 24, mh = 16, sw = 24, sh = 10;
+int checkForStar(int x, int y) {
+    int m_y_min = y;
+    int m_y_max = m_y_min + mh;
+    int m_x_min = x;
+    int m_x_max = m_x_min + mw;
+    if (starCount == 0) return 0;
+    for (int i = 0; i < MAX_STARS; i++) {
+        if (!stars[i].starOn) continue;
+        int s_x_min = stars[i].x - 0;
+        int s_x_max = s_x_min + sw;
+        int s_y_min = height - stars[i].y;
+        int s_y_max = s_y_min + sh;
+        if (m_x_min < s_x_max && m_x_max > s_x_min &&
+            m_y_min < s_y_max && m_y_max > s_y_min) {
+            deleteStar(stars[i].x, height - stars[i].y);
+            stars[i].starOn = 0;
+            return 1;
+        }
+    }
+    return 0;
+}
+
 typedef struct {
     int goombaOn;
     int x;
     int y;
+    int canMoveFreely;
+    int direction;
 } Goomba;
 #define MAX_GOOMBAS 50
 Goomba goombas[MAX_GOOMBAS];
+
+void moveGoombas() {
+    for (int i = 0; i < MAX_GOOMBAS; i++) {
+        if (!goombas[i].goombaOn || !goombas[i].canMoveFreely) continue;
+        deleteGoomba(goombas[i].x, height - goombas[i].y);
+
+        struct Coordinates newCoords = doMovement(goombas[i].x, goombas[i].y, &goombas[i].direction);
+        
+        goombas[i].x = newCoords.x;
+        goombas[i].y = newCoords.y;
+        printGoomba(goombas[i].x, height - goombas[i].y);
+
+        if (goombas[i].x < -12 || goombas[i].x > width + 12) {
+            goombas[i].goombaOn = 0;
+        }
+            
+    }
+}
 int goombaCount = 0;
 void addGoomba(int x, int y) {
     if (goombaCount >= MAX_GOOMBAS) return;
-    goombas[goombaCount++] = (Goomba){1, x, y};
+    goombas[goombaCount++] = (Goomba){1, x, y, 0, -1};
 }
 int floorCounter = 0;
-void eviornment(){
+void eviornment() {
     module = 0;
     if (moduleClock>=250){
         moduleClock = 0;
@@ -100,13 +144,14 @@ void eviornment(){
 
         case 3:
             floorOn = 0;
+            addStar(width+20, 40); // temp delete later
             addBrick(width+0, 20);
             addBrick(width+14, 20);
             addBrick(width+28, 20);
 
-            addBrick(width+100, 30);
-            addBrick(width+114, 30);
-            addBrick(width+128, 30);
+            addBrick(width+80, 30);
+            addBrick(width+94, 30);
+            addBrick(width+108, 30);
             addGoomba(width+110, 38);
 
             addBrick(width+180, 40);
@@ -198,9 +243,15 @@ void eviornment(){
     for (int i = 0; i < MAX_GOOMBAS; i++){
         if (!goombas[i].goombaOn) continue;
         deleteGoomba(goombas[i].x, height - goombas[i].y);
-        goombas[i].x--; 
+        goombas[i].x--;
+        if (!goombas[i].canMoveFreely && goombas[i].x <= width - 12){
+            goombas[i].canMoveFreely = 1;
+        }
+    
         printGoomba(goombas[i].x, height - goombas[i].y);
         if (goombas[i].x < -12) goombas[i].goombaOn = 0; 
     }
+
+
     moduleClock++;
 }

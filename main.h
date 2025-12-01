@@ -56,7 +56,15 @@ void printStar(int, int);
 void deleteStar(int, int);
 void safePrint(int, int, char *, int);
 
+// Goomba written by Ryan
+struct Coordinates {
+    int x;
+    int y;
+};
+struct Coordinates doMovement(int xIn, int yIn, int *direction);
+void moveGoombas();
 
+int checkForStar(int, int);
 //Mario written by Michael
 int checkTop(int, int);
 int checkBottom(int, int);

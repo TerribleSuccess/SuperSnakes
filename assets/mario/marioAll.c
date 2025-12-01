@@ -6,6 +6,9 @@ int checkTop(int xIn, int yIn){
     int y = yIn;
     for (int i = 0; i < 24; i+=2){
         if (PAIR_NUMBER(mvinch(y-1, x+i)) != COLOR_PAIR_BABYBLUE){
+            if (checkForStar(x + i, y - 1)) {
+                return 3;
+            }
             if(PAIR_NUMBER(mvinch(y+i, x-1)) == COLOR_PAIR_BROWNDEATH) gameOn = 0;
             return 0;
         }
@@ -21,6 +24,9 @@ int checkBottom(int xIn, int yIn){
     }
     for (int i = 0; i < 24; i+=2){
         if (PAIR_NUMBER(mvinch(y+16, x+i)) != COLOR_PAIR_BABYBLUE){
+            if (checkForStar(x + i , y + 16)) {
+                return 3;
+            }
             if(PAIR_NUMBER(mvinch(y+16, x+i)) == COLOR_PAIR_BROWNDEATH) return 2;
             return 0;
         }
@@ -33,6 +39,9 @@ int checkRight(int xIn, int yIn){
     int y = yIn;
     for (int i = 0; i < 16; i+=2){
         if (PAIR_NUMBER(mvinch(y+i, x+24)) != COLOR_PAIR_BABYBLUE) {
+            if (checkForStar(x+24, y + i)) {
+                return 3;
+            }
             if(PAIR_NUMBER(mvinch(y+i, x-1)) == COLOR_PAIR_BROWNDEATH) gameOn = 0;
             return 0;
         }
@@ -45,6 +54,9 @@ int checkLeft(int xIn, int yIn){
     int y = yIn;
     for (int i = 0; i < 16; i+=2){
         if (PAIR_NUMBER(mvinch(y+i, x-1)) != COLOR_PAIR_BABYBLUE){
+            if (checkForStar(x - 1, y + i)) {
+                return 3;
+            }
             if(PAIR_NUMBER(mvinch(y+i, x-1)) == COLOR_PAIR_BROWNDEATH) gameOn = 0;
             return 0;
         }

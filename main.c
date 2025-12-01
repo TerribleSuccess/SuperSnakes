@@ -28,28 +28,33 @@ typedef struct {
     int yVelocity;
     int facing;
     int skidding;
+    long starTime;
 } Mario;
 
 Mario m;
 
 const int ACCEL_GROUND = 4;
-const int ACCEL_AIR = 2;
+const int ACCEL_AIR = 3;
 const int MAX_SPEED_GROUND = 6;
-const int MAX_SPEED_AIR = 3;
+const int MAX_SPEED_AIR = 5;
 const int FRICTION = 2; 
 const int SKID_DECEL = 2;
 const int GRAVITY = 2; 
-const int JUMP_VEL = 40; 
+const int JUMP_VEL = 50; 
 
 const int FRAMES_PER_SECOND = 60;
 
+int goombaMoveTime = 0;
 void gameLoop() {
     deleteMario(m.x, m.y);
+    
+    int bottomCheck = checkBottom(m.x, m.y);
+    int onGround = !bottomCheck;
 
-    int onGround = !checkBottom(m.x, m.y);
-
-    if(checkBottom(m.x, m.y)==2){ //If on goombas head then jump
+    if(bottomCheck==2){ //If on goombas head then jump
         m.yVelocity = JUMP_VEL;
+    } else if (bottomCheck == 3) { // If collected star
+        m.starTime = 15 * FRAMES_PER_SECOND;
     }
 
     if (jump){
@@ -118,15 +123,25 @@ void gameLoop() {
     }
 
      if (m.xVelocity != 0) {
-        if (m.xVelocity > 0 && checkRight(m.x, m.y)){
+        int rightCheck = checkRight(m.x + m.xVelocity, m.y);
+        if (rightCheck == 3) {
+            m.starTime = 15 * FRAMES_PER_SECOND;
+        }
+        if (m.xVelocity > 0 && rightCheck){
             m.facing = 1;
             if (m.x < width/2-20){
                 m.x+=m.xVelocity;    //Moving more then 1 space can cause bugs
             }else{
                 eviornment();
             }
-        }else if (m.xVelocity < 0 && m.x > 2 && checkLeft(m.x, m.y)){
-            m.x+=m.xVelocity;     //Moving more then 1 space at a time can cause bugs
+        }else if (m.xVelocity < 0 && m.x > 2){
+            int leftCheck = checkLeft(m.x + m.xVelocity, m.y);
+            if (leftCheck == 3) { // If collected star
+                m.starTime = 15 * FRAMES_PER_SECOND;
+            }
+            if (leftCheck){
+                m.x+=m.xVelocity;     //Moving more then 1 space at a time can cause bugs
+            }
         }
     }
     if (m.facing == 1) { 
@@ -136,12 +151,27 @@ void gameLoop() {
            printMarioRight(m.x, m.y); 
         }
         
-    }else if (m.facing == -1) {
+    } else if (m.facing == -1) {
         if (m.yVelocity > 0){
             printMarioLeftJump(m.x, m.y);
         }else{
             printMarioLeft(m.x, m.y); 
         }
+    }
+    if (m.starTime) {
+        mvprintw(0, 0, "Star Time: %ld  ", m.starTime);
+        m.starTime--;
+    }
+
+    // halfs their speed
+    if (goombaMoveTime % 2 == 0) {
+        moveGoombas();
+        goombaMoveTime++;
+    } else {
+        goombaMoveTime = 0;
+    }
+    if (checkForStar(m.x, m.y)) {
+        m.starTime = 15 * FRAMES_PER_SECOND;
     }
     refresh();
 }
