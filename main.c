@@ -130,7 +130,7 @@ void gameLoop() {
         if (m.xVelocity > 0 && rightCheck){
             m.facing = 1;
             if (m.x < width/2-20){
-                m.x+=m.xVelocity;    //Moving more then 1 space can cause bugs
+                m.x++;
             }else{
                 eviornment();
             }
@@ -140,7 +140,7 @@ void gameLoop() {
                 m.starTime = 15 * FRAMES_PER_SECOND;
             }
             if (leftCheck){
-                m.x+=m.xVelocity;     //Moving more then 1 space at a time can cause bugs
+                m.x--;
             }
         }
     }

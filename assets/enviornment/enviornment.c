@@ -84,7 +84,7 @@ Goomba goombas[MAX_GOOMBAS];
 
 void moveGoombas() {
     for (int i = 0; i < MAX_GOOMBAS; i++) {
-        if (!goombas[i].goombaOn || !goombas[i].canMoveFreely) continue;
+        if (!goombas[i].goombaOn || goombas[i].x > width + 12) continue;
         deleteGoomba(goombas[i].x, height - goombas[i].y);
 
         struct Coordinates newCoords = doMovement(goombas[i].x, goombas[i].y, &goombas[i].direction);
@@ -93,16 +93,15 @@ void moveGoombas() {
         goombas[i].y = newCoords.y;
         printGoomba(goombas[i].x, height - goombas[i].y);
 
-        if (goombas[i].x < -12 || goombas[i].x > width + 12) {
-            goombas[i].goombaOn = 0;
+        if (goombas[i].x < -12) {
+             goombas[i].goombaOn = 0;
         }
-            
     }
 }
 int goombaCount = 0;
 void addGoomba(int x, int y) {
     if (goombaCount >= MAX_GOOMBAS) return;
-    goombas[goombaCount++] = (Goomba){1, x, y, 0, -1};
+    goombas[goombaCount++] = (Goomba){1, x, y, 1, -1};
 }
 int floorCounter = 0;
 void eviornment() {
@@ -244,9 +243,6 @@ void eviornment() {
         if (!goombas[i].goombaOn) continue;
         deleteGoomba(goombas[i].x, height - goombas[i].y);
         goombas[i].x--;
-        if (!goombas[i].canMoveFreely && goombas[i].x <= width - 12){
-            goombas[i].canMoveFreely = 1;
-        }
     
         printGoomba(goombas[i].x, height - goombas[i].y);
         if (goombas[i].x < -12) goombas[i].goombaOn = 0; 

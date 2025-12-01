@@ -34,19 +34,27 @@ void printGoomba(int x, int y) {
 }
 
 int checkLeftGoomba(int x, int y) {
-    int color_pair_down_left = PAIR_NUMBER(mvinch(y - 9, x - 1));
-    if (color_pair_down_left == COLOR_PAIR_BABYBLUE) return 0; 
-    int color_pair_left = PAIR_NUMBER(mvinch(y, x - 1));
-    if (color_pair_left != COLOR_PAIR_BABYBLUE) return 0;
+    int color_pair_down_left = PAIR_NUMBER(mvinch(y + 8, x - 1));
+    if (color_pair_down_left == COLOR_PAIR_BABYBLUE) return 0;
+    int color_pair_left = PAIR_NUMBER(mvinch(y+3, x - 1));
+    if (color_pair_left != COLOR_PAIR_BABYBLUE) {
+        if (color_pair_left == COLOR_PAIR_SKIN){
+            gameOn = 0;
+        }
+        return 0;}
     return 1;
 }
 
 int checkRightGoomba(int x, int y) {
     if (x + 12 >= width) return 0;
-    int color_pair_down_right = PAIR_NUMBER(mvinch(y - 9, x + 12));
+    int color_pair_down_right = PAIR_NUMBER(mvinch(y + 8, x + 12));
     if (color_pair_down_right == COLOR_PAIR_BABYBLUE) return 0;
-    int color_pair_right = PAIR_NUMBER(mvinch(y, x + 12));
-    if (color_pair_right != COLOR_PAIR_BABYBLUE) return 0; 
+    int color_pair_right = PAIR_NUMBER(mvinch(y+3, x + 12));
+    if (color_pair_right != COLOR_PAIR_BABYBLUE) {
+        if (color_pair_right == COLOR_PAIR_SKIN){
+            gameOn = 0;
+        }
+        return 0;}
     return 1; 
 }
 
@@ -55,23 +63,18 @@ struct Coordinates doMovement(int x, int y, int *direction) {
     struct Coordinates newCoords;
     newCoords.x = x;
     newCoords.y = y;
-
     if (*direction == -1) {
-        if (checkLeftGoomba(newCoords.x, newCoords.y)) {
+        if (checkLeftGoomba(newCoords.x, height - newCoords.y)) {
             newCoords.x -= 1;
         } else {
             *direction = 1; 
         }
     } else {
-        if (checkRightGoomba(newCoords.x, newCoords.y)) {
+        if (checkRightGoomba(newCoords.x, height - newCoords.y)) {
             newCoords.x += 1;
         } else {
-            *direction = -1; 
+           *direction = -1; 
         }
     }
-
     return newCoords;
 }
-
-
-
