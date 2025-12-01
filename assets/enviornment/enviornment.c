@@ -175,6 +175,7 @@ void eviornment() {
 
         case 5:
             floorOn = 1;
+            gameOn = 2;
             //End of game
             break;
             

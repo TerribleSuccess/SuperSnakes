@@ -196,6 +196,7 @@ int main(){
     refresh();
     printTitle(width/2-40, height/4);
     printTitleText(width/2-30, height/4+16);
+    printLose();
 
     //Start Game on Char input
     getch();
@@ -235,8 +236,12 @@ int main(){
         usleep(1000000 / FRAMES_PER_SECOND);
     }
 
-    //End Of Program
-    printWin();
+    
+    if (gameOn == 2){
+        printWin();
+    }else{
+        printLose();
+    }
     sleep(10);
 
     endwin();
