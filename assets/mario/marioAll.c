@@ -1,6 +1,7 @@
 #include <curses.h>
 #include "../../main.h"
 
+//Mostly by Michael, checks marios hitbox for walls, stars and goombas, also deletes mario
 int checkTop(int xIn, int yIn){
     int x = xIn;
     int y = yIn;
@@ -39,6 +40,11 @@ int checkRight(int xIn, int yIn){
     int y = yIn;
     for (int i = 0; i < 16; i+=2){
         if (PAIR_NUMBER(mvinch(y+i, x+24)) != COLOR_PAIR_BABYBLUE) {
+            if ((PAIR_NUMBER(mvinch(y+i, x+24)) == COLOR_PAIR_GREYFINISH)){
+                gameOn = 2;
+                return 0;
+            }
+            
             if (checkForStar(x+24, y + i)) {
                 return 3;
             }

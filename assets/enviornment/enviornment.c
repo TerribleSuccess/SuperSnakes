@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "../../main.h"
 
+//Written by ryan, controls pretty much the entire game enviornment, adding removing and moving elements around the screen,
+//it selects fixed modules to create a semi random experience.
+
 int nextFloor = 0;
 int floorOn = 1;
 
@@ -33,6 +36,19 @@ int brickCount = 0;
 void addBrick(int x, int y) {
     if (brickCount >= MAX_BRICKS) return;
     bricks[brickCount++] = (Brick){1, x, y};
+}
+
+typedef struct {
+    int castleOn;
+    int x;
+    int y;
+}Castle;
+#define MAX_CASTLES 1
+Castle castles[MAX_CASTLES];
+int castleCount = 0;
+void addCastle(int x, int y) {
+    if (castleCount >= MAX_CASTLES) return;
+    castles[castleCount++] = (Castle){1, x, y};
 }
 
 typedef struct {
@@ -103,14 +119,17 @@ void addGoomba(int x, int y) {
     if (goombaCount >= MAX_GOOMBAS) return;
     goombas[goombaCount++] = (Goomba){1, x, y, 1, -1};
 }
+
+
 int floorCounter = 0;
 void eviornment() {
     module = 0;
+    moduleClock++;
     if (moduleClock>=250){
         moduleClock = 0;
         floorCounter = 0;
-        module = rand()%5;
-        if (marioTraveled >= 100) module = 5;
+        module = rand()%4;
+        if (marioTraveled >= 2500) module = 5;
         switch (module){
             case 0:
             floorOn = 1;
@@ -175,10 +194,8 @@ void eviornment() {
 
         case 5:
             floorOn = 1;
-            gameOn = 2;
-            //End of game
+            addCastle(width, 30);
             break;
-            
         }
     }
 
@@ -198,6 +215,13 @@ void eviornment() {
         floorCounter++;
     }
     
+    if (castles[0].castleOn){
+        deleteCastle(castles[0].x, height-castles[0].y);
+            castles[0].x--;
+            for (int j = 0; j < 4; j++){
+                printCastle(castles[0].x, height-castles[0].y);
+            }
+    }
 
     for (int i = 0; i < MAX_STARS; i++){
         if (!stars[i].starOn)continue;
@@ -248,7 +272,4 @@ void eviornment() {
         printGoomba(goombas[i].x, height - goombas[i].y);
         if (goombas[i].x < -12) goombas[i].goombaOn = 0; 
     }
-
-
-    moduleClock++;
 }

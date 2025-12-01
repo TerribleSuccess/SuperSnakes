@@ -1,6 +1,7 @@
 #include <curses.h>
 #include "../../main.h"
 
+//Written by Michael
 //Colors are from 0 to 999 not 0 to 255, can convert
 //Non-default colors and color pairs are defined in main.h but included here for reference
 
@@ -28,4 +29,5 @@ void initializeColors(){
     init_pair(COLOR_PAIR_TITLETEXT, COLOR_BLACK, COLOR_WHITE);
     init_pair(COLOR_PAIR_GREEN, COLOR_GREEN, COLOR_GREEN);
     init_pair(COLOR_PAIR_STARBLACK, COLOR_BLACK, COLOR_BLACK);
+    init_pair(COLOR_PAIR_GREYFINISH, COLOR_BLACK, COLOR_BLACK);
 }

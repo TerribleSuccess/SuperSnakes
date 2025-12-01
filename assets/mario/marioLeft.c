@@ -1,6 +1,7 @@
 #include <curses.h>
 #include "../../main.h"
 
+//By Michael, Prints Mario Facing Left
 void printMarioLeft(int x, int y) {
     safePrint(y+0, x+8, "          ", COLOR_PAIR_RED);
     

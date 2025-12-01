@@ -1,6 +1,7 @@
 #include <curses.h>
 #include "../../main.h"
 
+//By Michael, Prints "YOU WIN"
 void printWin(){
     int x = width/2-23;
     int y = height/2;
@@ -86,7 +87,7 @@ void printWin(){
     safePrint(y+3, x+42,  "  ", COLOR_PAIR_RED);
     safePrint(y+3, x+44,  "  ", COLOR_PAIR_WHITE);
     safePrint(y+3, x+46,  "  ", COLOR_PAIR_RED);
-        safePrint(y+3, x+48,  "  ", COLOR_PAIR_WHITE);
+    safePrint(y+3, x+48,  "  ", COLOR_PAIR_WHITE);
     safePrint(y+3, x+50,  "  ", COLOR_PAIR_RED);
 
 

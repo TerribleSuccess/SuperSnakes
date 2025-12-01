@@ -14,6 +14,7 @@
 #define COLOR_PAIR_GREEN 10
 #define COLOR_PAIR_BROWNDEATH 11
 #define COLOR_PAIR_STARBLACK 12
+#define COLOR_PAIR_GREYFINISH 13
 
 #define COLOR_BROWN 8
 #define COLOR_SKIN 9
@@ -40,13 +41,10 @@ void printWin();
 void initializeFloor();
 
 void eviornment();
-
 void printBrick(int, int, int);
 void deleteBrick(int, int);
-
 void printLose();
-
-
+void printCastle(int xIn, int yIn);
 int printPipe(int, int, int, int);
 void deletePipe(int, int, int);
 void printGoomba(int, int);
@@ -56,6 +54,7 @@ void deleteBlock(int, int);
 void printStar(int, int);
 void deleteStar(int, int);
 void safePrint(int, int, char *, int);
+void deleteCastle(int, int);
 
 // Goomba written by Ryan
 struct Coordinates {

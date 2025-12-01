@@ -1,6 +1,8 @@
 #include <curses.h>
 #include "../../main.h"
 
+
+//By Michael, Prints "YOU LOSE"
 void printLose(){
     int x = width/2-30;
     int y = height/2-3;

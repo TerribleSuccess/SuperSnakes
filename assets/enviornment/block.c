@@ -2,6 +2,7 @@
 #include "../../main.h"
 #include <stdlib.h>
 
+//By Michael, prints a block used in level design.
 void printBlock(int xIn, int yIn){
     int x = xIn;
     int y = yIn;

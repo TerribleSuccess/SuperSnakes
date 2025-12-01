@@ -1,6 +1,7 @@
 #include <curses.h>
 #include "../../main.h"
 
+//By Michael, Prints Mario Facing Left and Jumping
 void printMarioLeftJump(int x, int y)
 {
     safePrint(y, x,  "     ", COLOR_PAIR_SKIN);

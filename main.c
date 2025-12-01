@@ -45,6 +45,11 @@ const int JUMP_VEL = 50;
 const int FRAMES_PER_SECOND = 60;
 
 int goombaMoveTime = 0;
+/*
+Written by Ryan and Michael
+The game loop controls the entire game, it controls marios movement,
+calls enviornment() to scroll the screen right and computes marios physics
+*/
 void gameLoop() {
     deleteMario(m.x, m.y);
     
@@ -175,7 +180,10 @@ void gameLoop() {
     }
     refresh();
 }
-
+/*
+Written by Michael and Ryan:
+The main function sets up the window, collects keypresses from the user and handels the start and end screens.
+*/
 int main(){
     struct winsize wbuf;
     if(ioctl(0, TIOCGWINSZ, &wbuf) != - 1){
@@ -187,7 +195,6 @@ int main(){
     cbreak();
     noecho();
     curs_set(0);
-    keypad(stdscr, TRUE);
 
     
     //Setup Title Screen
@@ -196,7 +203,6 @@ int main(){
     refresh();
     printTitle(width/2-40, height/4);
     printTitleText(width/2-30, height/4+16);
-    printLose();
 
     //Start Game on Char input
     getch();
@@ -219,7 +225,7 @@ int main(){
     
     printMarioRight(m.x, m.y);
     refresh();
-    while (gameOn) {
+    while (gameOn==1) {
         right = left = jump = crouch = 0;
         int ch;
         while ((ch = getch()) != ERR) {
@@ -236,7 +242,6 @@ int main(){
         usleep(1000000 / FRAMES_PER_SECOND);
     }
 
-    
     if (gameOn == 2){
         printWin();
     }else{

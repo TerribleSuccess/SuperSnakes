@@ -1,7 +1,7 @@
 #include <curses.h>
 #include "../../main.h"
 
-
+//By Michael, Prints "YOU WIN"
 void printTitleText(int xIn, int yIn){
     int x = xIn;
     int y = yIn;
@@ -31,6 +31,4 @@ void printTitleText(int xIn, int yIn){
     printMarioRightJump(width/2-26, height-20);
     printMarioLeftJump(width/2+2, height-20);
     initializeFloor(0);
-
-    printStar(2, 1);
 }

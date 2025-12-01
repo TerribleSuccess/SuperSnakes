@@ -1,6 +1,7 @@
 #include <curses.h>
 #include "../../main.h"
 
+//By Michael prints and deletes star
 void deleteStar(int xIn, int yIn){
     int x = xIn;
     int y = yIn;

@@ -1,6 +1,7 @@
 #include <curses.h>
 #include "../../main.h"
 
+//By Michael prints a 4x8 brick one sliver at a time
 int printBrickSect(int, int, int);
 
 void deleteBrick(int xIn, int yIn){

@@ -1,6 +1,7 @@
 #include <curses.h>
 #include "../../main.h"
 
+// Goomba written by Ryan
 void deleteGoomba(int xIn, int yIn){
     int x = xIn;
     int y = yIn;

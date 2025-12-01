@@ -1,6 +1,7 @@
 #include <curses.h>
 #include "../../main.h"
 
+//By Michael, prints and deletes pipes
 void deletePipe(int xIn, int yIn, int height){
     int x = xIn;
     int y = yIn;
