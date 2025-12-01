@@ -38,8 +38,7 @@ int checkLeftGoomba(int x, int y) {
     if (color_pair_down_left == COLOR_PAIR_BABYBLUE) return 0; 
     int color_pair_left = PAIR_NUMBER(mvinch(y, x - 1));
     if (color_pair_left != COLOR_PAIR_BABYBLUE) return 0;
-
-    return 1; // can move left
+    return 1;
 }
 
 int checkRightGoomba(int x, int y) {
