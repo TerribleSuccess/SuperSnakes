@@ -40,7 +40,7 @@ const int MAX_SPEED_AIR = 5;
 const int FRICTION = 2; 
 const int SKID_DECEL = 2;
 const int GRAVITY = 2; 
-const int JUMP_VEL = 50; 
+const int JUMP_VEL = 60; 
 
 const int FRAMES_PER_SECOND = 60;
 
@@ -59,7 +59,7 @@ long hasStar() {
 void renderScore() {
     attron(COLOR_PAIR(COLOR_PAIR_BABYBLUE));
     mvprintw(1, 2, "SCORE");
-    mvprintw(2, 2, "%02d", score);
+    mvprintw(2, 2, "%05d", score);
     attroff(COLOR_PAIR(COLOR_PAIR_BABYBLUE));
 }
 
@@ -215,6 +215,8 @@ void gameLoop() {
             frames = 0;
             timeLeft--;
         }
+    } else {
+        gameOn = 0;
     }
     if (starFlashIndex < 6) {
         starFlashIndex++;
@@ -298,5 +300,6 @@ int main(){
     sleep(10);
 
     endwin();
+    printf("Last game score: %d\n", score);
     return 1;
 }

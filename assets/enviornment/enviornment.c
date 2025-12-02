@@ -96,7 +96,7 @@ int checkForStar(int x, int y) {
             m_y_min < s_y_max && m_y_max > s_y_min) {
             deleteStar(stars[i].x, height - stars[i].y);
             stars[i].starOn = 0;
-            incrementScore(2);
+            incrementScore(200);
             return 1;
         }
     }
@@ -152,7 +152,7 @@ int checkForGoomba(int x, int y) {
             m_y_min < g_y_max && m_y_max > g_y_min) {
             deleteGoomba(goombas[i].x, height - goombas[i].y);
             goombas[i].goombaOn = 0;
-            incrementScore(1);
+            incrementScore(100);
             return 1;
         }
     }
@@ -209,7 +209,7 @@ void enviornment() {
 
         case 3:
             floorOn = 0;
-            addStar(width+20, 40); // temp delete later
+            addStar(width+20, 40);
             addBrick(width+0, 20);
             addBrick(width+14, 20);
             addBrick(width+28, 20);
@@ -255,7 +255,7 @@ void enviornment() {
             break;
         }
     }
-
+    incrementScore(1);
     marioTraveled++;
 
 

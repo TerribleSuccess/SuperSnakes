@@ -47,10 +47,10 @@ int checkLeftGoomba(int x, int y) {
 }
 
 int checkRightGoomba(int x, int y) {
-    if (x + 12 >= width) return 0;
-    int color_pair_down_right = PAIR_NUMBER(mvinch(y + 8, x + 12));
+    if (x + 16 >= width) return 0;
+    int color_pair_down_right = PAIR_NUMBER(mvinch(y + 8, x + 16));
     if (color_pair_down_right == COLOR_PAIR_BABYBLUE) return 0;
-    int color_pair_right = PAIR_NUMBER(mvinch(y+3, x + 12));
+    int color_pair_right = PAIR_NUMBER(mvinch(y+3, x + 16));
     if (color_pair_right != COLOR_PAIR_BABYBLUE) {
         if (color_pair_right == COLOR_PAIR_SKIN){
             gameOn = 0;
