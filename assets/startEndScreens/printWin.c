@@ -2,7 +2,7 @@
 #include "../../main.h"
 
 //By Michael, Prints "YOU WIN"
-void printWin(){
+void printWin(int score){
     int x = width/2-23;
     int y = height/2;
 
@@ -111,5 +111,8 @@ void printWin(){
 
 
     safePrint(y+5, x, "                                                    ", COLOR_PAIR_RED);
+    char scoreText[64];
+    sprintf(scoreText, "SCORE: %d", score);
+    safePrint(y + 8, x + 24, scoreText, COLOR_PAIR_WHITE);
     refresh();
 }

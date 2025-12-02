@@ -3,7 +3,7 @@
 
 
 //By Michael, Prints "YOU LOSE"
-void printLose(){
+void printLose(int score){
     int x = width/2-30;
     int y = height/2-3;
 
@@ -132,5 +132,9 @@ void printLose(){
 
 
     safePrint(y+6, x, "                                                            ", COLOR_PAIR_RED);
+    char scoreText[64];
+    sprintf(scoreText, "SCORE: %d", score);
+    safePrint(y + 8, x + 24, scoreText, COLOR_PAIR_WHITE);
+
     refresh();
 }

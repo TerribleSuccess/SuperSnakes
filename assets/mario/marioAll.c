@@ -10,7 +10,15 @@ int checkTop(int xIn, int yIn){
             if (checkForStar(x + i, y - 1)) {
                 return 3;
             }
-            if(PAIR_NUMBER(mvinch(y+i, x-1)) == COLOR_PAIR_BROWNDEATH) gameOn = 0;
+             if(PAIR_NUMBER(mvinch(y+i, x-1)) == COLOR_PAIR_BROWNDEATH) {
+                if (hasStar()) {
+                    if (checkForGoomba(x + 1, y + i)) {
+                        return 1;
+                    }
+                } else {
+                    gameOn = 0;
+                }
+            }
             return 0;
         }
     }
@@ -28,7 +36,9 @@ int checkBottom(int xIn, int yIn){
             if (checkForStar(x + i , y + 16)) {
                 return 3;
             }
-            if(PAIR_NUMBER(mvinch(y+16, x+i)) == COLOR_PAIR_BROWNDEATH) return 2;
+            if(PAIR_NUMBER(mvinch(y+16, x+i)) == COLOR_PAIR_BROWNDEATH && checkForGoomba(x + i, y + 16)) {
+               return 2;
+            }
             return 0;
         }
     }
@@ -48,7 +58,15 @@ int checkRight(int xIn, int yIn){
             if (checkForStar(x+24, y + i)) {
                 return 3;
             }
-            if(PAIR_NUMBER(mvinch(y+i, x-1)) == COLOR_PAIR_BROWNDEATH) gameOn = 0;
+             if(PAIR_NUMBER(mvinch(y+i, x+24)) == COLOR_PAIR_BROWNDEATH) {
+                if (hasStar()) {
+                    if (checkForGoomba(x + 24, y + i)) {
+                        return 1;
+                    }
+                } else {
+                    gameOn = 0;
+                }
+            } 
             return 0;
         }
     }
@@ -63,7 +81,15 @@ int checkLeft(int xIn, int yIn){
             if (checkForStar(x - 1, y + i)) {
                 return 3;
             }
-            if(PAIR_NUMBER(mvinch(y+i, x-1)) == COLOR_PAIR_BROWNDEATH) gameOn = 0;
+            if(PAIR_NUMBER(mvinch(y+i, x-1)) == COLOR_PAIR_BROWNDEATH) {
+                if (hasStar()) {
+                    if (checkForGoomba(x - 1, y + i)) {
+                        return 1;
+                    }
+                } else {
+                    gameOn = 0;
+                }
+            }
             return 0;
         }
     }
@@ -76,4 +102,33 @@ void deleteMario(int xIn, int yIn){
     for (int i = 0; i < 16; i++){
         safePrint(y+i, x, "                        ", COLOR_PAIR_BABYBLUE);
     }
+}
+
+int starColor(int color) {
+    if (!hasStar()) return color;
+
+    switch (getStarFlashIndex()) {
+        case 0: // YELLOW
+        case 1:
+            if (color == COLOR_PAIR_SKIN ||
+                color == COLOR_PAIR_RED ||
+                color == COLOR_PAIR_BROWN)
+                return COLOR_PAIR_YELLOW;
+            return color;
+
+        case 2:
+        case 3: // CYAN
+            if (color == COLOR_PAIR_SKIN ||
+                color == COLOR_PAIR_RED ||
+                color == COLOR_PAIR_BROWN)
+                return COLOR_PAIR_BABYBLUE;
+            return color;
+
+        case 4:
+        case 5: // WHITE FLASH
+            if (color != COLOR_PAIR_BLACK)
+                return COLOR_PAIR_WHITE;
+            return color;
+    }
+    return color;
 }

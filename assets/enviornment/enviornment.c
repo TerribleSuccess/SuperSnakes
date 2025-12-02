@@ -82,6 +82,7 @@ int checkForStar(int x, int y) {
             m_y_min < s_y_max && m_y_max > s_y_min) {
             deleteStar(stars[i].x, height - stars[i].y);
             stars[i].starOn = 0;
+            incrementScore(2);
             return 1;
         }
     }
@@ -120,6 +121,29 @@ void addGoomba(int x, int y) {
     goombas[goombaCount++] = (Goomba){1, x, y, 1, -1};
 }
 
+int gw = 8, gh = 9;
+int checkForGoomba(int x, int y) {
+    int m_y_min = y;
+    int m_y_max = m_y_min + mh;
+    int m_x_min = x;
+    int m_x_max = m_x_min + mw;
+    if (goombaCount == 0) return 0;
+    for (int i = 0; i < MAX_GOOMBAS; i++) {
+        if (!goombas[i].goombaOn) continue;
+        int g_x_min = goombas[i].x - 0;
+        int g_x_max = g_x_min + sw;
+        int g_y_min = height - goombas[i].y;
+        int g_y_max = g_y_min + sh;
+        if (m_x_min < g_x_max && m_x_max > g_x_min &&
+            m_y_min < g_y_max && m_y_max > g_y_min) {
+            deleteGoomba(goombas[i].x, height - goombas[i].y);
+            goombas[i].goombaOn = 0;
+            incrementScore(1);
+            return 1;
+        }
+    }
+    return 0;
+}
 
 int floorCounter = 0;
 void eviornment() {
@@ -162,7 +186,6 @@ void eviornment() {
 
         case 3:
             floorOn = 0;
-            addStar(width+20, 40); // temp delete later
             addBrick(width+0, 20);
             addBrick(width+14, 20);
             addBrick(width+28, 20);

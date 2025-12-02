@@ -35,7 +35,7 @@ void printTitleText(int, int);
 void clearScreenSlow(void);
 
 //Win Screen
-void printWin();
+void printWin(int);
 
 //Ground
 void initializeFloor();
@@ -43,7 +43,7 @@ void initializeFloor();
 void eviornment();
 void printBrick(int, int, int);
 void deleteBrick(int, int);
-void printLose();
+void printLose(int);
 void printCastle(int xIn, int yIn);
 int printPipe(int, int, int, int);
 void deletePipe(int, int, int);
@@ -64,6 +64,11 @@ struct Coordinates {
 struct Coordinates doMovement(int xIn, int yIn, int *direction);
 void moveGoombas();
 int checkForStar(int, int);
+long hasStar();
+void incrementScore(int);
+int checkForGoomba(int, int);
+int getStarFlashIndex();
+int starColor(int);
 
 //Mario written by Michael
 int checkTop(int, int);

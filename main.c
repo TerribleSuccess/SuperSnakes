@@ -45,6 +45,37 @@ const int JUMP_VEL = 50;
 const int FRAMES_PER_SECOND = 60;
 
 int goombaMoveTime = 0;
+int score = 0;
+int frames = 0;
+int timeLeft = 300;
+void incrementScore(int amount) {
+    score += amount;
+}
+
+long hasStar() {
+    return m.starTime;
+}
+
+void renderScore() {
+    attron(COLOR_PAIR(COLOR_PAIR_BABYBLUE));
+    mvprintw(1, 2, "SCORE");
+    mvprintw(2, 2, "%02d", score);
+    attroff(COLOR_PAIR(COLOR_PAIR_BABYBLUE));
+}
+
+void renderTime() {
+    attron(COLOR_PAIR(COLOR_PAIR_BABYBLUE));
+    int rightX = width - 8;
+    mvprintw(1, rightX, "TIME");
+    mvprintw(2, rightX, "%03d", timeLeft);
+    attroff(COLOR_PAIR(COLOR_PAIR_BABYBLUE));
+}
+
+int starFlashIndex = 0;
+int getStarFlashIndex() {
+    return starFlashIndex;
+}
+
 /*
 Written by Ryan and Michael
 The game loop controls the entire game, it controls marios movement,
@@ -164,7 +195,6 @@ void gameLoop() {
         }
     }
     if (m.starTime) {
-        mvprintw(0, 0, "Star Time: %ld  ", m.starTime);
         m.starTime--;
     }
 
@@ -178,6 +208,21 @@ void gameLoop() {
     if (checkForStar(m.x, m.y)) {
         m.starTime = 15 * FRAMES_PER_SECOND;
     }
+     if (timeLeft >= 1) {
+        if (frames < 60) {
+            frames++;
+        } else {
+            frames = 0;
+            timeLeft--;
+        }
+    }
+    if (starFlashIndex < 6) {
+        starFlashIndex++;
+    } else {
+        starFlashIndex = 0;
+    }
+    renderScore();
+    renderTime();
     refresh();
 }
 /*
@@ -243,9 +288,12 @@ int main(){
     }
 
     if (gameOn == 2){
-        printWin();
+        if (timeLeft >= 0) {
+            score += timeLeft * 50;
+        }
+        printWin(score);
     }else{
-        printLose();
+        printLose(score);
     }
     sleep(10);
 
