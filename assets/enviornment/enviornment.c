@@ -139,11 +139,11 @@ int floorCounter = 0;
 void enviornment() {
     module = 0;
     moduleClock++;
-    if (moduleClock>=2500){
+    if (moduleClock>=250){
         moduleClock = 0;
         floorCounter = 0;
         module = +rand()%5;
-        if (marioTraveled >= 250) module = 5;
+        if (marioTraveled >= 2500) module = 5;
         if (marioTraveled == 0) module = 6;
         switch (module){
             case 0:
