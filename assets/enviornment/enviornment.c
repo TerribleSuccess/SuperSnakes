@@ -243,12 +243,12 @@ void enviornment() {
         case 5:
             addCastle(width, 34);
             for (int i = 0; i < 510; i+=8){
-                addFloor(width+i,5);
+                addFloor(width+i,4);
             }
             break;
 
         case 6:
-            for (int i = 0; i < 200; i+=8){
+            for (int i = 0; i < 200+width/2; i+=8){
                 addFloor(i,4);
             }
             moduleClock+=200;
