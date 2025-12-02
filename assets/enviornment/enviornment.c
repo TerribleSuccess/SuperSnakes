@@ -1,15 +1,15 @@
 #include <curses.h>
 #include <stdlib.h>
 #include "../../main.h"
-
-//Written by ryan, controls pretty much the entire game enviornment, adding removing and moving elements around the screen,
+#include <time.h> 
+//Written by ryan and michael, controls pretty much the entire game enviornment, adding removing and moving elements around the screen,
 //it selects fixed modules to create a semi random experience.
 
 int nextFloor = 0;
 int floorOn = 1;
 
 int marioTraveled = 0;
-int moduleClock = 200;
+int moduleClock = 250;
 int module;
 
 typedef struct {
@@ -36,6 +36,20 @@ int brickCount = 0;
 void addBrick(int x, int y) {
     if (brickCount >= MAX_BRICKS) return;
     bricks[brickCount++] = (Brick){1, x, y};
+}
+
+typedef struct {
+    int floorOn;
+    int x;
+    int y;
+}Floor;
+#define MAX_FLOORS 10000
+Floor floors[MAX_FLOORS];
+int floorCount = 0;
+int minFloor = 0;
+void addFloor(int x, int y) {
+    if (floorCount >= MAX_FLOORS) return;
+    floors[floorCount++] = (Floor){1, x, y};
 }
 
 typedef struct {
@@ -122,97 +136,111 @@ void addGoomba(int x, int y) {
 
 
 int floorCounter = 0;
-void eviornment() {
+void enviornment() {
     module = 0;
     moduleClock++;
-    if (moduleClock>=250){
+    if (moduleClock>=2500){
         moduleClock = 0;
         floorCounter = 0;
-        module = rand()%4;
-        if (marioTraveled >= 2500) module = 5;
+        module = +rand()%5;
+        if (marioTraveled >= 250) module = 5;
+        if (marioTraveled == 0) module = 6;
         switch (module){
             case 0:
-            floorOn = 1;
             addPipe(width, 14);
             addPipe(width+60, 24);
             addPipe(width+120, 34);
             addBrick(width+180, 40);
             addBrick(width+194, 40);
             addBrick(width+208, 40);
-            addStar(width+200, 60);
+            if (rand()%5 == 1)addStar(width+200, 60);
+            for (int i = 0; i < 180; i+=8){
+                addFloor(width+i,4);
+            }
+            
             break;
          case 1:
-            floorOn = 1;
             addPipe(width, 12);
             addPipe(width+100, 18);
             addPipe(width+200, 24);
 
             addGoomba(width + 45, 12);
             addGoomba(width + 145, 12);
+            for (int i = 0; i < 517; i+=8){
+                addFloor(width+i,4);
+            }
+
             break;
 
         case 2:
-            floorOn = 1;
             addPipe(width, 14);
             addPipe(width+60, 24);
-            addPipe(width+120, 34);
+            addPipe(width+150, 34);
+            if (rand()%5 == 1)addStar(width+200, 60);
 
-            addStar(width+200, 60);
+            for (int i = 0; i < 510; i+=8){
+                addFloor(width+i,4);
+            }
             break;
 
         case 3:
-            floorOn = 0;
-            addStar(width+20, 40); // temp delete later
             addBrick(width+0, 20);
             addBrick(width+14, 20);
             addBrick(width+28, 20);
 
-            addBrick(width+80, 30);
-            addBrick(width+94, 30);
-            addBrick(width+108, 30);
-            addGoomba(width+110, 38);
+            addBrick(width+80, 26);
+            addBrick(width+94, 26);
+            if (rand()%5 == 1)addStar(width+100, 50);
+            addBrick(width+108, 26);
+            addBrick(width+122, 26);
+            addGoomba(width+110, 34);
 
-            addBrick(width+180, 40);
-            addBrick(width+194, 40);
-            addBrick(width+208, 40);
+            addBrick(width+180, 30);
+            addBrick(width+194, 30);
+            addBrick(width+208, 30);
             break;
 
         case 4:
-            floorOn = 0;
             addBrick(width+0, 20);
             addBrick(width+14, 20);
             addBrick(width+28, 20);
 
-            addBrick(width+100, 40);
-            addBrick(width+114, 40);
-            addBrick(width+128, 40);
+            addBrick(width+100, 30);
+            addBrick(width+114, 30);
+            addBrick(width+128, 30);
 
-            addBrick(width+180, 40);
-            addBrick(width+194, 40);
-            addBrick(width+208, 40);
+            addBrick(width+180, 20);
+            addBrick(width+194, 20);
+            addBrick(width+208, 20);
             break;
 
         case 5:
-            floorOn = 1;
-            addCastle(width, 30);
+            addCastle(width, 34);
+            for (int i = 0; i < 510; i+=8){
+                addFloor(width+i,5);
+            }
+            break;
+
+        case 6:
+            for (int i = 0; i < 200; i+=8){
+                addFloor(i,4);
+            }
+            moduleClock+=200;
             break;
         }
     }
 
     marioTraveled++;
 
-    if (floorOn){
-        initializeFloor(nextFloor);
-        if (nextFloor<3){
-            nextFloor++;
-        }else{
-            nextFloor = 0;
-        }
-    }else{
-        for (int i = 0; i < width+8; i += 8) {
-        deleteBrick(i+width-floorCounter, height-4);
-        }
-        floorCounter++;
+
+    for (int i = minFloor; i < minFloor+100; i++){
+        if (!floors[i].floorOn)continue;
+            deleteBrick(floors[i].x, height-floors[i].y);
+            floors[i].x--;
+            for (int j = 0; j < 4; j++){
+                printBrick(floors[i].x, height-floors[i].y,0);
+            }
+        if (floors[i].x < -40) minFloor++;
     }
     
     if (castles[0].castleOn){

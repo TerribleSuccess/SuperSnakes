@@ -40,7 +40,7 @@ void printWin();
 //Ground
 void initializeFloor();
 
-void eviornment();
+void enviornment();
 void printBrick(int, int, int);
 void deleteBrick(int, int);
 void printLose();
