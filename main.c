@@ -4,7 +4,7 @@
 #include "main.h"
 #include <stdlib.h>
 #include <math.h>
-
+#include <time.h>
 
 int gameOn = 1;
 
@@ -168,7 +168,7 @@ void gameLoop() {
             if (m.x < width/2-20){
                 m.x++;
             }else{
-                eviornment();
+                enviornment();
             }
         }else if (m.xVelocity < 0 && m.x > 2){
             int leftCheck = checkLeft(m.x + m.xVelocity, m.y);
@@ -240,7 +240,7 @@ int main(){
     cbreak();
     noecho();
     curs_set(0);
-
+    srand(time(NULL));
     
     //Setup Title Screen
     initializeColors();
@@ -258,10 +258,10 @@ int main(){
     clearScreenSlow();
     refresh();
 
-    initializeFloor(0);
+    enviornment();
     refresh();
     m.x = 20;
-    m.y = height - 16 - 5;
+    m.y = height - 16 - 22;
     m.width = 3;
     m.height = 3;
     m.xVelocity = 0;
